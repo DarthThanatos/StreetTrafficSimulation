@@ -3,6 +3,11 @@ package model;
 import model.streetpart.Crossroads;
 import model.streetpart.StreetPart;
 import model.streetpart.TravelPoint;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
 import sim.engine.SimState;
 import sim.field.grid.ObjectGrid2D;
 
@@ -19,6 +24,8 @@ public class Traffic extends SimState {
     private  StreetPart [][] streetParts = new StreetPart[ROWS][COLUMNS];
     private Map<Point, RouteNode> routeGraph;
 
+    private DirectedGraph<Point, DefaultEdge> directedGraph =
+            new DefaultDirectedGraph<>(DefaultEdge.class);
 
     @Override
     public void start(){
@@ -108,14 +115,20 @@ public class Traffic extends SimState {
         for (int i = 0; i < ROWS; i++){
             for (int j = 0; j < COLUMNS; j++){
                 routeGraph.put(new Point(j, i), new RouteNode(j, i));
+                directedGraph.addVertex(new Point(j,i));
             }
         }
         for(int i = 0; i < ROWS; i++){
             for (int j = 0; j < COLUMNS; j++){
                 StreetPart streetPart = streetParts[i][j];
                 streetPart.initRouteNodeFrom(routeGraph);
+                RouteNode routeNode = routeGraph.get(new Point(j,i));
+                for(RouteNode neighbor: routeNode.neighbours.values()){
+                    directedGraph.addEdge(new Point(routeNode.x, routeNode.y), new Point(neighbor.x, neighbor.y));
+                }
             }
         }
+
     }
 
     private void cleanGraph(){
@@ -126,8 +139,11 @@ public class Traffic extends SimState {
     synchronized List<Point> mountRouteFromTo(TravelPoint from, TravelPoint to){
         cleanGraph();
         RouteNode start = routeGraph.get(new Point(from.streetPart.getX(), from.streetPart.getY()));
-        List<Point> res = start.findRouteTo(new Point(to.streetPart.getX(), to.streetPart.getY()));
-        Collections.reverse(res);
-        return res;
+        StreetPart target = to.streetPart;
+//        List<Point> res = start.findRouteTo(new Point(to.streetPart.getX(), to.streetPart.getY()));
+//        Collections.reverse(res);
+        DijkstraShortestPath<Point, DefaultEdge> dijkstraShortestPath = new DijkstraShortestPath<Point, DefaultEdge>(directedGraph);
+        ShortestPathAlgorithm.SingleSourcePaths<Point, DefaultEdge> paths = dijkstraShortestPath.getPaths(new Point(start.x, start.y) );
+        return paths.getPath(new Point (target.getX(), target.getY())).getVertexList();
     }
 }

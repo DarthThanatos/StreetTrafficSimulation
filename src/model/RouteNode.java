@@ -7,7 +7,7 @@ public class RouteNode {
 
     boolean visited;
     public Map<Point, RouteNode> neighbours ;
-    private int x, y;
+    int x, y;
 
 
     RouteNode(int x, int y){
