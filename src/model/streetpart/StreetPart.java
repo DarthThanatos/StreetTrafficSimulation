@@ -11,11 +11,11 @@ import java.util.List;
 
 public abstract class StreetPart{
 
-    Traffic traffic;
+    private Traffic traffic;
     HashMap<Point, Vehicle> vehiclesByLocation;
     GridPart[][] gridsInStreetPart;
 
-    protected int x,y;
+    int x,y;
 
     StreetPart(Traffic traffic, int x, int  y){
         this.traffic = traffic;
@@ -59,5 +59,8 @@ public abstract class StreetPart{
         return traffic;
     }
 
+    public boolean tryPerformMove(Point current, Point target){
+     return false;
+    }
 
 }

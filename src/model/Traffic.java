@@ -142,7 +142,7 @@ public class Traffic extends SimState {
         StreetPart target = to.streetPart;
 //        List<Point> res = start.findRouteTo(new Point(to.streetPart.getX(), to.streetPart.getY()));
 //        Collections.reverse(res);
-        DijkstraShortestPath<Point, DefaultEdge> dijkstraShortestPath = new DijkstraShortestPath<Point, DefaultEdge>(directedGraph);
+        DijkstraShortestPath<Point, DefaultEdge> dijkstraShortestPath = new DijkstraShortestPath<>(directedGraph);
         ShortestPathAlgorithm.SingleSourcePaths<Point, DefaultEdge> paths = dijkstraShortestPath.getPaths(new Point(start.x, start.y) );
         return paths.getPath(new Point (target.getX(), target.getY())).getVertexList();
     }

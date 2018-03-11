@@ -20,12 +20,16 @@ public class Vehicle implements Steppable {
     private GridPart gridPart;
 
 
-    public void setSource(TravelPoint source){
+    void setSource(TravelPoint source){
         this.source = source;
     }
 
     @Override
     public void step(SimState simState) {
+        if(currentPosition < streetPartsRoute.size() - 1)
+            if(gridPart.getStreetPart().tryPerformMove(streetPartsRoute.get(currentPosition), streetPartsRoute.get(currentPosition + 1)))
+                currentPosition ++;
+        
         System.out.println("======");
         System.out.println("Source: " + source);
         System.out.println("Target: " + target);
@@ -47,15 +51,11 @@ public class Vehicle implements Steppable {
         resetRoute();
     }
 
-    public void move(){
-        currentPosition ++;
-    }
-
     public StreetPart.DIRECTION getCurrentDirection(){
         return route.get(currentPosition);
     }
 
-    public void setGridPart(GridPart gridPart){
+    void setGridPart(GridPart gridPart){
         this.gridPart = gridPart;
     }
 }
