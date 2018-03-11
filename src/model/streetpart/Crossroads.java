@@ -1,12 +1,14 @@
 package model.streetpart;
 
 import model.GridPart;
+import model.RouteNode;
 import model.Traffic;
 import model.Vehicle;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Crossroads extends StreetPart {
 
@@ -57,5 +59,28 @@ public class Crossroads extends StreetPart {
     @Override
     public void moveVehicle(Vehicle vehicle, DIRECTION direction) {
 
+    }
+
+    @Override
+    public void initRouteNodeFrom(Map<Point, RouteNode> routeGraph) {
+        RouteNode routeNode = routeGraph.get(new Point(x, y));
+        RouteNode neighbor;
+        Point key;
+        if(x - 1 >= 0){
+            key  = new Point (x-1, y);
+            routeNode.neighbours.put(key, routeGraph.get(key));
+        }
+        if(x+1 < Traffic.COLUMNS){
+            key = new Point(x+1, y);
+            routeNode.neighbours.put(key, routeGraph.get(key));
+        }
+        if(y-1 >= 0){
+            key  = new Point (x, y-1);
+            routeNode.neighbours.put(key, routeGraph.get(key));
+        }
+        if(y+1 < Traffic.ROWS){
+            key  = new Point (x, y+1);
+            routeNode.neighbours.put(key, routeGraph.get(key));
+        }
     }
 }

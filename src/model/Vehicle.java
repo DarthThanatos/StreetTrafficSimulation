@@ -5,12 +5,15 @@ import model.streetpart.TravelPoint;
 import sim.engine.SimState;
 import sim.engine.Steppable;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Vehicle implements Steppable {
 
 
     private ArrayList<StreetPart.DIRECTION> route;
+    private List<Point> streetPartsRoute;
     private int currentPosition = 0;
     private TravelPoint source;
     private TravelPoint target;
@@ -26,6 +29,9 @@ public class Vehicle implements Steppable {
         System.out.println("======");
         System.out.println("Source: " + source);
         System.out.println("Target: " + target);
+        System.out.println(
+            streetPartsRoute.stream().map(point -> "(" + point.x + ", " + point.y + ")").reduce((agg, s) ->  agg + "; " + s)
+        );
         System.out.println("======");
     }
 
@@ -33,6 +39,7 @@ public class Vehicle implements Steppable {
         route = new ArrayList<>();
         currentPosition = 0;
         target = gridPart.getStreetPart().getTraffic().getRandomTargetTravelPoint(source);
+        streetPartsRoute = gridPart.getStreetPart().getTraffic().mountRouteFromTo(source, target);
     }
 
 

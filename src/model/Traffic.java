@@ -6,9 +6,9 @@ import model.streetpart.TravelPoint;
 import sim.engine.SimState;
 import sim.field.grid.ObjectGrid2D;
 
-import java.util.HashMap;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 
 public class Traffic extends SimState {
 
@@ -17,6 +17,8 @@ public class Traffic extends SimState {
     public static int ROWS = 9, COLUMNS = 9, TILE_SIZE =  8;
     private ObjectGrid2D allStreetsGrids = new ObjectGrid2D(COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
     private  StreetPart [][] streetParts = new StreetPart[ROWS][COLUMNS];
+    private Map<Point, RouteNode> routeGraph;
+
 
     @Override
     public void start(){
@@ -41,6 +43,7 @@ public class Traffic extends SimState {
                 schedule.scheduleRepeating(vehicle);
             }
         }
+        initRouteGraph();
         for(int i = 0; i < ROWS; i++){
             for (int j = 0; j < COLUMNS; j++){
                 streetParts[i][j].initVehicles();
@@ -98,5 +101,33 @@ public class Traffic extends SimState {
         StreetPart exitStreet = (StreetPart) exitPoints.keySet().toArray()[randomStreetIndex];
         int randomGridIndex = new Random().nextInt(exitPoints.get(exitStreet).size());
         return new TravelPoint(exitStreet, exitPoints.get(exitStreet).get(randomGridIndex));
+    }
+
+    private void initRouteGraph(){
+        routeGraph = new HashMap<>();
+        for (int i = 0; i < ROWS; i++){
+            for (int j = 0; j < COLUMNS; j++){
+                routeGraph.put(new Point(j, i), new RouteNode(j, i));
+            }
+        }
+        for(int i = 0; i < ROWS; i++){
+            for (int j = 0; j < COLUMNS; j++){
+                StreetPart streetPart = streetParts[i][j];
+                streetPart.initRouteNodeFrom(routeGraph);
+            }
+        }
+    }
+
+    private void cleanGraph(){
+        for(RouteNode routeNode : routeGraph.values())
+            routeNode.visited = false;
+    }
+
+    synchronized List<Point> mountRouteFromTo(TravelPoint from, TravelPoint to){
+        cleanGraph();
+        RouteNode start = routeGraph.get(new Point(from.streetPart.getX(), from.streetPart.getY()));
+        List<Point> res = start.findRouteTo(new Point(to.streetPart.getX(), to.streetPart.getY()));
+        Collections.reverse(res);
+        return res;
     }
 }

@@ -81,6 +81,7 @@ public class TrafficDisplay extends GUIState {
                             TrafficDisplay.this.crossroadsImage.getScaledInstance((int)(tileWidth * display.getScale()), (int)(tileHeight * display.getScale()), 0),
                             imgX, imgY, null
                     );
+
                 }
 
 

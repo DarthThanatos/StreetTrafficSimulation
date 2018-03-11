@@ -1,6 +1,7 @@
 package model.streetpart;
 
 import model.GridPart;
+import model.RouteNode;
 import model.Traffic;
 import model.Vehicle;
 
@@ -46,6 +47,8 @@ public abstract class StreetPart{
         }
     }
 
+    public abstract void initRouteNodeFrom(Map<Point, RouteNode> routeGraph);
+
     public enum DIRECTION{NORT, EAST, SOUTH, WEST};
 
     public Set<Point> getVehiclesPositions(){
@@ -55,4 +58,6 @@ public abstract class StreetPart{
     public Traffic getTraffic() {
         return traffic;
     }
+
+
 }
