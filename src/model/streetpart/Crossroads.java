@@ -297,7 +297,10 @@ public class Crossroads extends StreetPart {
         }
         if(from == DIRECTION.WEST)
             res |= gridsInStreetPart[4][0].setVehicle(vehicle);
-        if(res) vehiclesByLocation.put(vehicle.getGridPart().getLocalPoint(), vehicle);
+        if(res) {
+            vehiclesByLocation.put(vehicle.getGridPart().getLocalPoint(), vehicle);
+            System.out.println("Added at dir: " + from);
+        }
         return res;
     }
 
@@ -330,9 +333,9 @@ public class Crossroads extends StreetPart {
             boolean res = gridsInStreetPart[to.y][to.x].setVehicle(vehicle);
             if(res){
                 gridsInStreetPart[from.y][from.x].setVehicle(null);
+                vehiclesByLocation.remove(from);
+                vehiclesByLocation.put(to, vehicle);
             }
-            vehiclesByLocation.remove(from);
-            vehiclesByLocation.put(to, vehicle);
             return res;
         }
     }

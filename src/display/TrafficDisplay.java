@@ -103,12 +103,13 @@ public class TrafficDisplay extends GUIState {
 
     public void init(Controller c) {
         super.init(c);
-        display = new Display2D(DISPLAY_WIDTH,DISPLAY_HEIGHT,this);
+        display = new Display2D(DISPLAY_WIDTH ,DISPLAY_HEIGHT,this);
         display.setClipping(false);
         displayFrame = display.createFrame();
         displayFrame.setTitle("Traffic Display");
         c.registerFrame(displayFrame); // so the frame appears in the "Display" list
         displayFrame.setVisible(true);
+        displayFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         display.attach( streetPortrayal, "Streets" );
     }
 
