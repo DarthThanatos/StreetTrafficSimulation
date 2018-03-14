@@ -18,7 +18,7 @@ import java.util.List;
 
 public class Traffic extends SimState {
 
-    private int vehiclesNumber = 10;
+    private int vehiclesNumber = 20;
 
     public static int ROWS = 9, COLUMNS = 9, TILE_SIZE =  8;
     private ObjectGrid2D allStreetsGrids = new ObjectGrid2D(COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
@@ -182,11 +182,6 @@ public class Traffic extends SimState {
         if(res) {
             streetParts[firstStreet.y][firstStreet.x].removeVehicleAt(currentLocalLocation);
             System.out.println("Removing at " + firstStreet + " current local: " + currentLocalLocation);
-//            try {
-//                new BufferedReader(new InputStreamReader(System.in)).readLine();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
 
         }
         return res;
@@ -195,7 +190,6 @@ public class Traffic extends SimState {
     void endVehicleCycle(Vehicle vehicle){
         System.out.println("Ending cycle");
         vehicle.getGridPart().getStreetPart().removeVehicleAtTarget(vehicle);
-//        vehicle.getGridPart().getStreetPart().removeVehicleAt(vehicle.getGridPart().getLocalPoint());
         TravelPoint source = vehicle.getSource();
         source.pointReached = false;
         vehicle.setSource(source);

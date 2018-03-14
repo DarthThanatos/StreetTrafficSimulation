@@ -101,12 +101,10 @@ public class TrafficDisplay extends GUIState {
 
             }
         });
-        // reschedule the displayer
         display.reset();
         display.setBackdrop(Color.white);
-        // redraw the display
         display.repaint();
-
+        displayFrame.setSize(DISPLAY_WIDTH * 3 / 2, DISPLAY_HEIGHT * 3 / 2);
     }
 
     public void load(SimState state)
@@ -123,7 +121,6 @@ public class TrafficDisplay extends GUIState {
         displayFrame.setTitle("Traffic Display");
         c.registerFrame(displayFrame); // so the frame appears in the "Display" list
         displayFrame.setVisible(true);
-        displayFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         display.attach( streetPortrayal, "Streets" );
     }
 
