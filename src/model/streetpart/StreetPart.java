@@ -23,11 +23,9 @@ public abstract class StreetPart{
         vehiclesByLocation = new HashMap<>();
     }
 
-    public abstract void addVehicle(Vehicle vehicle, DIRECTION from, DIRECTION direction);
 
+    public abstract List<GridPart> getSourcePoints();
     public abstract List<GridPart> getExitPoints();
-
-    public abstract void moveVehicle(Vehicle vehicle, DIRECTION direction);
 
     public int getX() {
         return x;
@@ -41,15 +39,10 @@ public abstract class StreetPart{
         this.gridsInStreetPart = gridsInStreetPart;
     }
 
-    public void initVehicles() {
-        for(Vehicle vehicle: vehiclesByLocation.values()){
-            vehicle.calculateRoute();
-        }
-    }
+    public abstract void initRouteNodeHaving(Map<Point, RouteNode> routeGraph);
 
-    public abstract void initRouteNodeFrom(Map<Point, RouteNode> routeGraph);
 
-    public enum DIRECTION{NORT, EAST, SOUTH, WEST};
+    public enum DIRECTION{NORTH, EAST, SOUTH, WEST};
 
     public Set<Point> getVehiclesPositions(){
         return vehiclesByLocation.keySet();
@@ -59,8 +52,13 @@ public abstract class StreetPart{
         return traffic;
     }
 
-    public boolean tryPerformMove(Point current, Point target){
-     return false;
-    }
+
+    public abstract boolean addedVehicle(Vehicle vehicle, DIRECTION from);
+    public abstract boolean movedVehicleLocally(Vehicle vehicle, Point from, Point to);
+    public abstract void removeVehicleAtTarget(Vehicle vehicle);
+    public abstract void removeVehicleAt(Point localPosition);
+
+    public abstract List<Point> streetPartMoves(DIRECTION from, DIRECTION to);
+
 
 }
