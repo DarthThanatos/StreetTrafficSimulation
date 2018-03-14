@@ -12,7 +12,7 @@ public class DirectionUtils {
         if(point.x == 0){
             return StreetPart.DIRECTION.WEST;
         }
-        if(point.x == Traffic.COLUMNS - 1){
+        if(point.x == Traffic.TILE_SIZE - 1){
             return StreetPart.DIRECTION.EAST;
         }
         if(point.y == 0){

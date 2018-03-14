@@ -18,7 +18,7 @@ import java.util.List;
 
 public class Traffic extends SimState {
 
-    private int vehiclesNumber = 1;
+    private int vehiclesNumber = 10;
 
     public static int ROWS = 9, COLUMNS = 9, TILE_SIZE =  8;
     private ObjectGrid2D allStreetsGrids = new ObjectGrid2D(COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
