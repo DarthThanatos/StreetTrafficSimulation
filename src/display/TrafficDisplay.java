@@ -41,6 +41,15 @@ public class TrafficDisplay extends GUIState {
     }
 
 
+    public TrafficDisplay(SimState simState){
+        super(simState);
+        try {
+            crossroadsImage = ImageIO.read(new File("resources//crossroads.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args){
         TrafficDisplay vid = new TrafficDisplay();
         Console c = new Console(vid);
@@ -92,6 +101,11 @@ public class TrafficDisplay extends GUIState {
 
             }
         });
+        // reschedule the displayer
+        display.reset();
+        display.setBackdrop(Color.white);
+        // redraw the display
+        display.repaint();
 
     }
 

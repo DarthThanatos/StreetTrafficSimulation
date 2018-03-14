@@ -64,10 +64,16 @@ public class Vehicle implements Steppable {
 //        if(currentStreetPartInPath == streetPartsRoute.size() -1) return;
         Point currentStreet = streetPartsRoute.get(currentStreetPartInPath);
         StreetPart.DIRECTION from = DirectionUtils.localPointToDirection(gridPart.getLocalPoint());
-        Point nextStreet = currentStreetPartInPath + 1 != streetPartsRoute.size() ? streetPartsRoute.get(currentStreetPartInPath + 1) : null;
+        System.out.println(from);
+        Point nextStreet = (currentStreetPartInPath + 1) != streetPartsRoute.size() ? streetPartsRoute.get(currentStreetPartInPath + 1) : null;
         StreetPart.DIRECTION to = nextStreet != null ? DirectionUtils.directionOfFirstComparedToSecond(nextStreet, currentStreet) : DirectionUtils.localPointToDirection(target.gridPart.getLocalPoint());
         localRouteMoves = gridPart.getStreetPart().streetPartMoves(from, to);
         currentLocalRouteMove = 0;
+
+        System.out.println(currentStreet + " -> " + (nextStreet != null ? nextStreet : target.gridPart.getLocalPoint()) + ", local: " + gridPart.getLocalPoint());
+        System.out.println(
+                localRouteMoves.stream().map(point -> "(" + point.x + ", " + point.y + ")").reduce((agg, s) ->  agg + "; " + s) + "\n"
+        );
     }
 
     private void normalStep() {

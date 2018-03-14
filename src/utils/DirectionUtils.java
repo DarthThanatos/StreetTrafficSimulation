@@ -8,6 +8,7 @@ import java.awt.*;
 public class DirectionUtils {
 
     public static StreetPart.DIRECTION localPointToDirection(Point point){
+        System.out.print("Mapped " + point + " to ");
         if(point.x == 0){
             return StreetPart.DIRECTION.WEST;
         }

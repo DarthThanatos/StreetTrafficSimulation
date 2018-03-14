@@ -28,6 +28,10 @@ public class Traffic extends SimState {
     private DirectedGraph<Point, DefaultEdge> directedGraph =
             new DefaultDirectedGraph<>(DefaultEdge.class);
 
+    public Traffic(long seed){
+        super(seed);
+    }
+
     @Override
     public void start(){
         super.start();
@@ -70,9 +74,6 @@ public class Traffic extends SimState {
         System.exit(0);
     }
 
-    public Traffic(long seed) {
-        super(seed);
-    }
 
     public void setVehiclesNumber(int vehiclesNumber) {
         this.vehiclesNumber = vehiclesNumber;
@@ -180,7 +181,7 @@ public class Traffic extends SimState {
         boolean res = streetParts[targetStreet.y][targetStreet.x].addedVehicle(vehicle, DirectionUtils.directionOfFirstComparedToSecond(firstStreet, targetStreet));
         if(res) {
             streetParts[firstStreet.y][firstStreet.x].removeVehicleAt(currentLocalLocation);
-            System.out.println("Removing at " + firstStreet);
+            System.out.println("Removing at " + firstStreet + " current local: " + currentLocalLocation);
 //            try {
 //                new BufferedReader(new InputStreamReader(System.in)).readLine();
 //            } catch (IOException e) {
@@ -193,8 +194,8 @@ public class Traffic extends SimState {
 
     void endVehicleCycle(Vehicle vehicle){
         System.out.println("Ending cycle");
-//        vehicle.getGridPart().getStreetPart().removeVehicleAtTarget(vehicle);
-        vehicle.getGridPart().getStreetPart().removeVehicleAt(vehicle.getGridPart().getLocalPoint());
+        vehicle.getGridPart().getStreetPart().removeVehicleAtTarget(vehicle);
+//        vehicle.getGridPart().getStreetPart().removeVehicleAt(vehicle.getGridPart().getLocalPoint());
         TravelPoint source = vehicle.getSource();
         source.pointReached = false;
         vehicle.setSource(source);

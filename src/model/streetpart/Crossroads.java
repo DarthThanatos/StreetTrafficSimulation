@@ -33,7 +33,7 @@ public class Crossroads extends StreetPart {
             res.add(gridsInStreetPart[3][7]);
         }
         else if((this.x == Traffic.COLUMNS - 1) && (this.y == Traffic.ROWS - 1)){
-            res.add(gridsInStreetPart[7][3]);
+            res.add(gridsInStreetPart[7][4]);
             res.add(gridsInStreetPart[3][7]);
         }
         else if(x == 0){
@@ -67,7 +67,7 @@ public class Crossroads extends StreetPart {
             res.add(gridsInStreetPart[4][7]);
         }
         else if((this.x == Traffic.COLUMNS - 1) && (this.y == Traffic.ROWS - 1)){
-            res.add(gridsInStreetPart[7][4]);
+            res.add(gridsInStreetPart[7][3]);
             res.add(gridsInStreetPart[4][7]);
         }
         else if(x == 0){
@@ -245,6 +245,7 @@ public class Crossroads extends StreetPart {
 
     @Override
     public List<Point> streetPartMoves(DIRECTION from, DIRECTION to) {
+        System.out.println("MOving from " + from + " to "+ to);
         if(from == DIRECTION.NORTH && to == DIRECTION.SOUTH) return streetCoordsNorthToSouth();
         if(from == DIRECTION.NORTH && to == DIRECTION.EAST) return streetCoordsNorthToEast();
         if(from == DIRECTION.NORTH && to == DIRECTION.WEST) return streetCoordsNorthToWest();
