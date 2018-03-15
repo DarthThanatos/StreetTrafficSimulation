@@ -17,7 +17,7 @@ public class RouteNode {
         neighbours = new HashMap<>();
     }
 
-    ArrayList<Point> findRouteTo(Point target){
+    private ArrayList<Point> findRouteTo(Point target){
         visited = true;
         if (target.x == x && target.y == y) return new ArrayList<>(Collections.singletonList(new Point(x, y)));
         ArrayList<ArrayList<Point>> results = new ArrayList<>();
