@@ -1,5 +1,5 @@
 mkdir bin
 find -name "*.java" > sources
-javac -d bin -cp "lib/*;bin" @sources
-java -cp "bin;lib/*" display.TrafficDisplay
+javac -d bin -cp "lib/*:bin" @sources
+java -cp "bin:lib/*" display.TrafficDisplay
 # java -cp "out/production/StreetTrafficSimulation;lib/*" display.TrafficDisplay
