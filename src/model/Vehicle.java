@@ -24,6 +24,8 @@ public class Vehicle implements Steppable {
 
     private GridPart gridPart;
 
+    private Statistics statistics = new Statistics();
+
     void setSource(TravelPoint source){
         this.source = source;
         this.gridPart = source.gridPart;
