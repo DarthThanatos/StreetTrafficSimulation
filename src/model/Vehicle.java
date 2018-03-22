@@ -50,15 +50,17 @@ public class Vehicle implements Steppable {
     }
 
     private void tryToReachSource(){
-        if(source.streetPart.addedVehicle(
+        boolean vehicleAdded = source.streetPart.addedVehicle(
                 this,
                 DirectionUtils.localPointToDirection(source.gridPart.getLocalPoint())
-        )){
+        );
+        if(vehicleAdded){
             source.pointReached = true;
             resetRoute();
             setupCurrentLocalRouteMoves();
             log();
         }
+        statistics.update(vehicleAdded, false);
     }
 
 
@@ -78,30 +80,38 @@ public class Vehicle implements Steppable {
     }
 
     private void normalStep() {
-        if(currentLocalRouteMove < localRouteMoves.size() - 1) {
-            if (gridPart.getStreetPart().movedVehicleLocally(
-                        this,
-                        localRouteMoves.get(currentLocalRouteMove),
-                        localRouteMoves.get(currentLocalRouteMove + 1))) {
+        boolean notEndOfCurrentTile = currentLocalRouteMove < localRouteMoves.size() - 1;
+        boolean notEndOfCurrentCycle = currentStreetPartInPath < streetPartsRoute.size() - 1;
+        boolean movedVehicleInThisStep = false;
+        if(notEndOfCurrentTile) {
+            boolean movedVehicleLocally = gridPart.getStreetPart().movedVehicleLocally(
+                    this,
+                    localRouteMoves.get(currentLocalRouteMove),
+                    localRouteMoves.get(currentLocalRouteMove + 1));
+            if (movedVehicleLocally) {
                 currentLocalRouteMove++;
+                movedVehicleInThisStep = true;
             }
         }
         else{
-             if(currentStreetPartInPath < streetPartsRoute.size() - 1){
-                 if(gridPart.getStreetPart().getTraffic().movedVehicleAcrossStreets(
+             if(notEndOfCurrentCycle){
+                 boolean movedVehicleAcrossStreets = gridPart.getStreetPart().getTraffic().movedVehicleAcrossStreets(
                          this,
                          streetPartsRoute.get(currentStreetPartInPath),
                          streetPartsRoute.get(currentStreetPartInPath + 1),
                          gridPart.getLocalPoint()
-                 )) {
+                 );
+                 if(movedVehicleAcrossStreets) {
                      currentStreetPartInPath ++;
                      setupCurrentLocalRouteMoves();
+                     movedVehicleInThisStep = true;
                  }
              }
              else{
                  gridPart.getStreetPart().getTraffic().endVehicleCycle(this);
              }
         }
+        statistics.update(movedVehicleInThisStep, !notEndOfCurrentCycle);
     }
 
     private void log(){
@@ -135,5 +145,9 @@ public class Vehicle implements Steppable {
 
     public Point[] getLocalMovesFromCurrent(){
         return Arrays.copyOfRange(localRouteMoves.toArray(new Point[localRouteMoves.size()]), currentLocalRouteMove, localRouteMoves.size());
+    }
+
+    Statistics getStatistics(){
+        return statistics;
     }
 }
