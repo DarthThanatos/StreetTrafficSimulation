@@ -9,7 +9,9 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import sim.engine.SimState;
+import sim.field.continuous.Continuous2D;
 import sim.field.grid.ObjectGrid2D;
+import sim.util.Double2D;
 import utils.DirectionUtils;
 
 import java.awt.*;
@@ -22,8 +24,11 @@ public class Traffic extends SimState {
 
     public static int ROWS = 9, COLUMNS = 9, TILE_SIZE =  8;
     private ObjectGrid2D allStreetsGrids = new ObjectGrid2D(COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
+    private Continuous2D vehiclesYardLayer = new Continuous2D(1, COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
     private  StreetPart [][] streetParts = new StreetPart[ROWS][COLUMNS];
     private Map<Point, RouteNode> routeGraph;
+
+    private List<Vehicle> vehicles = new ArrayList<>();
 
     private DirectedGraph<Point, DefaultEdge> directedGraph =
             new DefaultDirectedGraph<>(DefaultEdge.class);
@@ -42,10 +47,13 @@ public class Traffic extends SimState {
     }
 
     private void initVehicles(){
+        vehicles = new ArrayList<>();
         for(int i = 0; i< vehiclesNumber; i++){
             Vehicle vehicle = new Vehicle();
             TravelPoint source = getRandomSourcePoint();
             vehicle.setSource(source);
+            vehicles.add(vehicle);
+            vehiclesYardLayer.setObjectLocation(vehicle, new Double2D(0,0));
             schedule.scheduleRepeating(vehicle);
         }
 
@@ -194,5 +202,13 @@ public class Traffic extends SimState {
         source.pointReached = false;
         vehicle.setSource(source);
 
+    }
+
+    public Continuous2D getVehiclesYardLayer(){
+        return vehiclesYardLayer;
+    }
+
+    public List<Vehicle> getVehicles(){
+        return vehicles;
     }
 }

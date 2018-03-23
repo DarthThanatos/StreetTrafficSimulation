@@ -4,14 +4,17 @@ import model.streetpart.StreetPart;
 import model.streetpart.TravelPoint;
 import sim.engine.SimState;
 import sim.engine.Steppable;
+import sim.util.Double2D;
 import utils.DirectionUtils;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class Vehicle implements Steppable {
 
+    private String id = UUID.randomUUID().toString();
 
     private List<Point> streetPartsRoute;
     private int currentStreetPartInPath = 0;
@@ -149,5 +152,34 @@ public class Vehicle implements Steppable {
 
     Statistics getStatistics(){
         return statistics;
+    }
+
+    public double getAvgStepsPerIteration() {
+        return statistics.getAvgStepsPerIteration();
+    }
+
+    public double getAvgStepsPerCycle() {
+        return statistics.getAvgStepsPerCycle();
+    }
+
+    public double getAvgIterationsPerCycle() {
+        return statistics.getAvgIterationsPerCycle();
+    }
+
+    public double getAvgTimePerCycle() {
+        return statistics.getAvgTimePerCycle();
+    }
+
+    public double getAvgTimePerIteration() {
+        return statistics.getAvgTimePerIteration();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Point getCurrentGlobalPos(){
+        Double2D vehiclePos = gridPart.getStreetPart().getTraffic().getVehiclesYardLayer().getObjectLocation(this);
+        return new Point((int)vehiclePos.x, (int)vehiclePos.y);
     }
 }

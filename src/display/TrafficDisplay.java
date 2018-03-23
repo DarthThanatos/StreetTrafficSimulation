@@ -2,16 +2,20 @@ package display;
 
 import model.GridPart;
 import model.Traffic;
+import model.Vehicle;
 import model.streetpart.StreetPart;
 import sim.display.Console;
 import sim.display.Controller;
 import sim.display.Display2D;
 import sim.display.GUIState;
 import sim.engine.SimState;
+import sim.field.continuous.Continuous2D;
 import sim.field.grid.ObjectGrid2D;
 import sim.portrayal.DrawInfo2D;
+import sim.portrayal.continuous.ContinuousPortrayal2D;
 import sim.portrayal.grid.ObjectGridPortrayal2D;
 import sim.portrayal.simple.OvalPortrayal2D;
+import sim.util.Double2D;
 import sim.util.MutableInt2D;
 
 import javax.imageio.ImageIO;
@@ -20,6 +24,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 
 public class TrafficDisplay extends GUIState {
@@ -27,6 +32,7 @@ public class TrafficDisplay extends GUIState {
     private Display2D display;
     private JFrame displayFrame;
     private ObjectGridPortrayal2D streetPortrayal = new ObjectGridPortrayal2D();
+    private ContinuousPortrayal2D vehiclesPortrayal = new ContinuousPortrayal2D();
 
     private BufferedImage crossroadsImage;
     private static int DISPLAY_WIDTH = 720, DISPLAY_HEIGHT = 720;
@@ -64,13 +70,14 @@ public class TrafficDisplay extends GUIState {
 
     private void setupPortrayals() {
         ObjectGrid2D streets = ((Traffic) state).getAllStreetsGrids();
+        Continuous2D vehiclesYardLayer = ((Traffic) state).getVehiclesYardLayer();
+        vehiclesPortrayal.setField(vehiclesYardLayer);
         streetPortrayal.setField(streets);
         streetPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.BLUE){
             @Override
             public void draw(Object object, Graphics2D graphics, DrawInfo2D info) {
                 MutableInt2D location = (MutableInt2D) info.location;
                 GridPart gridPart = (GridPart) object;
-                StreetPart crossroads = gridPart.getStreetPart();
 
                 int tileWidth = DISPLAY_WIDTH / Traffic.COLUMNS;
                 int tileHeight = DISPLAY_HEIGHT / Traffic.ROWS;
@@ -93,14 +100,21 @@ public class TrafficDisplay extends GUIState {
 
                 }
 
+                if(gridPart.getVehicle() != null)
+                    vehiclesYardLayer.setObjectLocation(
+                            gridPart.getVehicle(), new Double2D(gridPart.getGlobalx() + .5,gridPart.getGlobaly() + .5)
+                    );
 
-                for(Point position: crossroads.getVehiclesPositions()){
-                    if(position.x == j && position.y == i)
-                        super.draw(object, graphics, info);
-                }
+//                for(Point position: crossroads.getVehiclesPositions()){
+//                    if(position.x == j && position.y == i) {
+//                        super.draw(object, graphics, info);
+//                    }
+//                }
+
 
             }
         });
+        vehiclesPortrayal.setPortrayalForAll(new  OvalPortrayal2D(Color.RED));
         display.reset();
         display.setBackdrop(Color.white);
         display.repaint();
@@ -122,6 +136,7 @@ public class TrafficDisplay extends GUIState {
         c.registerFrame(displayFrame); // so the frame appears in the "Display" list
         displayFrame.setVisible(true);
         display.attach( streetPortrayal, "Streets" );
+        display.attach(vehiclesPortrayal, "Vehicles");
     }
 
     public void quit()  {

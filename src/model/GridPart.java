@@ -61,24 +61,5 @@ public class GridPart {
         return new Point(localx, localy);
     }
 
-    public double getAvgStepsPerIteration() {
-        return vehicle == null ? 0 : vehicle.getStatistics().getAvgStepsPerIteration();
-    }
-
-    public double getAvgStepsPerCycle() {
-        return vehicle == null ? 0 : vehicle.getStatistics().getAvgStepsPerCycle();
-    }
-
-    public double getAvgIterationsPerCycle() {
-        return vehicle == null ? 0 : vehicle.getStatistics().getAvgIterationsPerCycle();
-    }
-
-    public double getAvgTimePerCycle() {
-        return vehicle == null ? 0 : vehicle.getStatistics().getAvgTimePerCycle();
-    }
-
-    public double getAvgTimePerIteration() {
-        return vehicle == null ? 0 : vehicle.getStatistics().getAvgTimePerIteration();
-    }
 }
 
