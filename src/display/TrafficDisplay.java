@@ -100,10 +100,10 @@ public class TrafficDisplay extends GUIState {
 
                 }
 
-                if(gridPart.getVehicle() != null)
-                    vehiclesYardLayer.setObjectLocation(
-                            gridPart.getVehicle(), new Double2D(gridPart.getGlobalx() + .5,gridPart.getGlobaly() + .5)
-                    );
+//                if(gridPart.getVehicle() != null)
+//                    vehiclesYardLayer.setObjectLocation(
+//                            gridPart.getVehicle(), new Double2D(gridPart.getGlobalx() + .5,gridPart.getGlobaly() + .5)
+//                    );
 
 //                for(Point position: crossroads.getVehiclesPositions()){
 //                    if(position.x == j && position.y == i) {

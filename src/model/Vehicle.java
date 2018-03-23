@@ -4,6 +4,7 @@ import model.streetpart.StreetPart;
 import model.streetpart.TravelPoint;
 import sim.engine.SimState;
 import sim.engine.Steppable;
+import sim.field.continuous.Continuous2D;
 import sim.util.Double2D;
 import utils.DirectionUtils;
 
@@ -44,15 +45,22 @@ public class Vehicle implements Steppable {
 
     @Override
     public void step(SimState simState) {
+        boolean posChanged = false;
         if(gridPart == source.gridPart && !source.pointReached){
-            tryToReachSource();
+            posChanged |= tryToReachSource();
         }
         else{
-            normalStep();
+            posChanged |= normalStep();
+        }
+        if(posChanged){
+            Continuous2D vehiclesYardLayer = gridPart.getStreetPart().getTraffic().getVehiclesYardLayer();
+            vehiclesYardLayer.setObjectLocation(
+                    gridPart.getVehicle(), new Double2D(gridPart.getGlobalx() + .5,gridPart.getGlobaly() + .5)
+            );
         }
     }
 
-    private void tryToReachSource(){
+    private boolean tryToReachSource(){
         boolean vehicleAdded = source.streetPart.addedVehicle(
                 this,
                 DirectionUtils.localPointToDirection(source.gridPart.getLocalPoint())
@@ -64,6 +72,7 @@ public class Vehicle implements Steppable {
             log();
         }
         statistics.update(vehicleAdded, false);
+        return vehicleAdded;
     }
 
 
@@ -82,7 +91,7 @@ public class Vehicle implements Steppable {
         );
     }
 
-    private void normalStep() {
+    private boolean normalStep() {
         boolean notEndOfCurrentTile = currentLocalRouteMove < localRouteMoves.size() - 1;
         boolean notEndOfCurrentCycle = currentStreetPartInPath < streetPartsRoute.size() - 1;
         boolean movedVehicleInThisStep = false;
@@ -115,6 +124,7 @@ public class Vehicle implements Steppable {
              }
         }
         statistics.update(movedVehicleInThisStep, !notEndOfCurrentCycle);
+        return movedVehicleInThisStep;
     }
 
     private void log(){
