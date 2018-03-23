@@ -1,9 +1,6 @@
 package display;
 
-import model.GridPart;
 import model.Traffic;
-import model.Vehicle;
-import model.streetpart.StreetPart;
 import sim.display.Console;
 import sim.display.Controller;
 import sim.display.Display2D;
@@ -15,7 +12,6 @@ import sim.portrayal.DrawInfo2D;
 import sim.portrayal.continuous.ContinuousPortrayal2D;
 import sim.portrayal.grid.ObjectGridPortrayal2D;
 import sim.portrayal.simple.OvalPortrayal2D;
-import sim.util.Double2D;
 import sim.util.MutableInt2D;
 
 import javax.imageio.ImageIO;
@@ -24,7 +20,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 
 public class TrafficDisplay extends GUIState {
@@ -77,7 +72,6 @@ public class TrafficDisplay extends GUIState {
             @Override
             public void draw(Object object, Graphics2D graphics, DrawInfo2D info) {
                 MutableInt2D location = (MutableInt2D) info.location;
-                GridPart gridPart = (GridPart) object;
 
                 int tileWidth = DISPLAY_WIDTH / Traffic.COLUMNS;
                 int tileHeight = DISPLAY_HEIGHT / Traffic.ROWS;
@@ -99,18 +93,6 @@ public class TrafficDisplay extends GUIState {
                     );
 
                 }
-
-//                if(gridPart.getVehicle() != null)
-//                    vehiclesYardLayer.setObjectLocation(
-//                            gridPart.getVehicle(), new Double2D(gridPart.getGlobalx() + .5,gridPart.getGlobaly() + .5)
-//                    );
-
-//                for(Point position: crossroads.getVehiclesPositions()){
-//                    if(position.x == j && position.y == i) {
-//                        super.draw(object, graphics, info);
-//                    }
-//                }
-
 
             }
         });
