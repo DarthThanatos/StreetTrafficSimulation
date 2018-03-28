@@ -84,23 +84,6 @@ public class Crossroads extends StreetPart {
         }
         return res;
     }
-    @Override
-    public List<Point> streetPartMoves(DIRECTION from, DIRECTION to) {
-        System.out.println("MOving from " + from + " to "+ to);
-        if(from == DIRECTION.NORTH && to == DIRECTION.SOUTH) return streetCoordsNorthToSouth();
-        if(from == DIRECTION.NORTH && to == DIRECTION.EAST) return streetCoordsNorthToEast();
-        if(from == DIRECTION.NORTH && to == DIRECTION.WEST) return streetCoordsNorthToWest();
-        if(from == DIRECTION.SOUTH && to == DIRECTION.NORTH) return streetCoordsSouthToNorth();
-        if(from == DIRECTION.SOUTH && to == DIRECTION.WEST) return streetCoordsSouthToWest();
-        if(from == DIRECTION.SOUTH && to == DIRECTION.EAST) return streetCoordsSouthToEast();
-        if(from == DIRECTION.EAST && to == DIRECTION.SOUTH) return streetCoordsEastToSouth();
-        if(from == DIRECTION.EAST && to == DIRECTION.NORTH) return streetCoordsEastToNorth();
-        if(from == DIRECTION.EAST && to == DIRECTION.WEST) return streetCoordsEastToWest();
-        if(from == DIRECTION.WEST && to == DIRECTION.SOUTH) return streetCoordsWestToSouth();
-        if(from == DIRECTION.WEST && to == DIRECTION.NORTH) return streetCoordsWestToNorth();
-        if(from == DIRECTION.WEST && to == DIRECTION.EAST) return streetCoordsWestToEast();
-        return new ArrayList<>();
-    }
 
     @Override
     public void initRouteNodeHaving(Map<Point, RouteNode> routeGraph) {
@@ -123,47 +106,4 @@ public class Crossroads extends StreetPart {
             routeNode.neighbours.put(key, routeGraph.get(key));
         }
     }
-
-
-    @Override
-    public synchronized boolean addedVehicle(Vehicle vehicle, DIRECTION from) {
-        boolean res = false;
-        if(from == DIRECTION.NORTH){
-            res |=  gridsInStreetPart[0][3].setVehicle(vehicle);
-        }
-        if(from == DIRECTION.EAST){
-            res |= gridsInStreetPart[3][7].setVehicle(vehicle);
-        }
-        if(from == DIRECTION.SOUTH){
-            res |= gridsInStreetPart[7][4].setVehicle(vehicle);
-        }
-        if(from == DIRECTION.WEST)
-            res |= gridsInStreetPart[4][0].setVehicle(vehicle);
-        if(res) {
-            vehiclesByLocation.put(vehicle.getGridPart().getLocalPoint(), vehicle);
-            System.out.println("Added at dir: " + from);
-        }
-        return res;
-    }
-
-
-    @Override
-    public void removeVehicleAtTarget(Vehicle vehicle) {
-        Point target = vehicle.getTarget().gridPart.getLocalPoint();
-        gridsInStreetPart[target.y][target.x].setVehicle(null);
-        vehiclesByLocation.remove(target);
-    }
-
-    @Override
-    public void removeVehicleAt(Point localPosition) {
-        gridsInStreetPart[localPosition.y][localPosition.x].setVehicle(null);
-        vehiclesByLocation.remove(localPosition);
-
-    }
-
-
-
-
-
-
 }
