@@ -320,26 +320,8 @@ public class Crossroads extends StreetPart {
 
     }
 
-    private boolean waitingAtCross(Point from){
-//        return Arrays.asList(new Point(4,5), new Point(5,3), new Point(3,2), new Point(2,4)).contains(from);
-        return false;
-    }
 
-    @Override
-    public synchronized boolean movedVehicleLocally(Vehicle vehicle, Point from, Point to) {
-        if(waitingAtCross(from)){
-            return false;
-        }
-        else{
-            boolean res = gridsInStreetPart[to.y][to.x].setVehicle(vehicle);
-            if(res){
-                gridsInStreetPart[from.y][from.x].setVehicle(null);
-                vehiclesByLocation.remove(from);
-                vehiclesByLocation.put(to, vehicle);
-            }
-            return res;
-        }
-    }
+
 
 
 

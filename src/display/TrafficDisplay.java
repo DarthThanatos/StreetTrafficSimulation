@@ -1,6 +1,7 @@
 package display;
 
 import model.Traffic;
+import model.streetpart.SingleLight;
 import sim.display.Console;
 import sim.display.Controller;
 import sim.display.Display2D;
@@ -11,6 +12,8 @@ import sim.field.grid.ObjectGrid2D;
 import sim.portrayal.DrawInfo2D;
 import sim.portrayal.continuous.ContinuousPortrayal2D;
 import sim.portrayal.grid.ObjectGridPortrayal2D;
+import sim.portrayal.simple.CircledPortrayal2D;
+import sim.portrayal.simple.LabelledPortrayal2D;
 import sim.portrayal.simple.OvalPortrayal2D;
 import sim.util.MutableInt2D;
 
@@ -28,6 +31,7 @@ public class TrafficDisplay extends GUIState {
     private JFrame displayFrame;
     private ObjectGridPortrayal2D streetPortrayal = new ObjectGridPortrayal2D();
     private ContinuousPortrayal2D vehiclesPortrayal = new ContinuousPortrayal2D();
+    private ContinuousPortrayal2D streetLightsPortrayal = new ContinuousPortrayal2D();
 
     private BufferedImage crossroadsImage;
     private static int DISPLAY_WIDTH = 720, DISPLAY_HEIGHT = 720;
@@ -64,10 +68,12 @@ public class TrafficDisplay extends GUIState {
 
 
     private void setupPortrayals() {
-        ObjectGrid2D streets = ((Traffic) state).getAllStreetsGrids();
+        ObjectGrid2D streetsGrids = ((Traffic) state).getAllStreetsGrids();
         Continuous2D vehiclesYardLayer = ((Traffic) state).getVehiclesYardLayer();
+        Continuous2D streetLightsYardLayer = ((Traffic) state).getStreetLightsYardLayer();
+        streetLightsPortrayal.setField(streetLightsYardLayer);
         vehiclesPortrayal.setField(vehiclesYardLayer);
-        streetPortrayal.setField(streets);
+        streetPortrayal.setField(streetsGrids);
         streetPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.BLUE){
             @Override
             public void draw(Object object, Graphics2D graphics, DrawInfo2D info) {
@@ -96,7 +102,21 @@ public class TrafficDisplay extends GUIState {
 
             }
         });
-        vehiclesPortrayal.setPortrayalForAll(new  OvalPortrayal2D(Color.RED));
+        streetLightsPortrayal.setPortrayalForAll(
+                new OvalPortrayal2D(){
+                    @Override
+                    public void draw(Object object, Graphics2D graphics, DrawInfo2D info) {
+                        SingleLight singleLight = (SingleLight) object;
+                        paint = singleLight.turnedOn() ? Color.green : Color.red;
+                        super.draw(object, graphics, info);
+                    }
+                }
+        );
+        vehiclesPortrayal.setPortrayalForAll(
+                new CircledPortrayal2D(
+                        new LabelledPortrayal2D(new OvalPortrayal2D(Color.BLUE), 5.0, null, Color.black, true),
+                        0, 5.0, Color.green, true
+                ));
         display.reset();
         display.setBackdrop(Color.white);
         display.repaint();
@@ -118,6 +138,7 @@ public class TrafficDisplay extends GUIState {
         c.registerFrame(displayFrame); // so the frame appears in the "Display" list
         displayFrame.setVisible(true);
         display.attach( streetPortrayal, "Streets" );
+        display.attach(streetLightsPortrayal, "StreetLights");
         display.attach(vehiclesPortrayal, "Vehicles");
     }
 

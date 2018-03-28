@@ -1,6 +1,8 @@
 package model;
 
-import model.streetpart.Crossroads;
+import model.generators.CrossroadsGenerator;
+import model.generators.DifferentCrossroadsGenerator;
+import model.generators.Generator;
 import model.streetpart.StreetPart;
 import model.streetpart.TravelPoint;
 import org.jgrapht.DirectedGraph;
@@ -25,6 +27,7 @@ public class Traffic extends SimState {
     public static int ROWS = 9, COLUMNS = 9, TILE_SIZE =  8;
     private ObjectGrid2D allStreetsGrids = new ObjectGrid2D(COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
     private Continuous2D vehiclesYardLayer = new Continuous2D(1, COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
+    private Continuous2D streetsYardLayer = new Continuous2D(1, COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
     private  StreetPart [][] streetParts = new StreetPart[ROWS][COLUMNS];
     private Map<Point, RouteNode> routeGraph;
 
@@ -46,35 +49,29 @@ public class Traffic extends SimState {
         initVehicles();
     }
 
+    @Override public void finish(){
+
+        super.finish();
+    }
+
     private void initVehicles(){
+        vehiclesYardLayer.clear();
         vehicles = new ArrayList<>();
         for(int i = 0; i< vehiclesNumber; i++){
             Vehicle vehicle = new Vehicle();
             TravelPoint source = getRandomSourcePoint();
             vehicle.setSource(source);
             vehicles.add(vehicle);
-            vehiclesYardLayer.setObjectLocation(vehicle, new Double2D(0,0));
+            vehiclesYardLayer.setObjectLocation(vehicle, new Double2D(-100,-100));
             schedule.scheduleRepeating(vehicle);
         }
 
     }
 
     private void initPlayground(){
-        for(int i = 0; i < ROWS; i++){
-            for (int j = 0; j< COLUMNS; j++){
-                Crossroads crossroads =  new Crossroads(this, j, i);
-                streetParts[i][j] = crossroads;
-                GridPart[][] gridsInStreetPart = new GridPart[Traffic.TILE_SIZE][Traffic.TILE_SIZE];
-                for(int k = 0; k < TILE_SIZE; k++){
-                    for(int l = 0; l < TILE_SIZE; l++){
-                        GridPart gridPart = new GridPart(crossroads, l, k, j * TILE_SIZE +l, i* TILE_SIZE + k);
-                        allStreetsGrids.set(j * TILE_SIZE +l, i* TILE_SIZE + k, gridPart);
-                        gridsInStreetPart[k][l] = gridPart;
-                    }
-                }
-                crossroads.setGridsInStreetPart(gridsInStreetPart);
-            }
-        }
+        streetsYardLayer.clear();
+        Generator generator = new DifferentCrossroadsGenerator();
+        generator.generate(this, streetParts, allStreetsGrids, streetsYardLayer);
     }
 
     public static void main(String[] args){
@@ -83,13 +80,6 @@ public class Traffic extends SimState {
     }
 
 
-    public void setVehiclesNumber(int vehiclesNumber) {
-        this.vehiclesNumber = vehiclesNumber;
-    }
-
-    public int getVehiclesNumber() {
-        return vehiclesNumber;
-    }
 
     public ObjectGrid2D getAllStreetsGrids() {
         return allStreetsGrids;
@@ -208,7 +198,17 @@ public class Traffic extends SimState {
         return vehiclesYardLayer;
     }
 
+    public Continuous2D getStreetLightsYardLayer(){return  streetsYardLayer;}
+
     public List<Vehicle> getVehicles(){
         return vehicles;
+    }
+
+    public void setVehiclesNumber(int vehiclesNumber) {
+        this.vehiclesNumber = vehiclesNumber;
+    }
+
+    public int getVehiclesNumber() {
+        return vehiclesNumber;
     }
 }

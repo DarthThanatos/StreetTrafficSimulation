@@ -10,7 +10,7 @@ public class GridPart {
     private Vehicle vehicle;
     private int localx,localy, globalx, globaly;
 
-    GridPart(StreetPart streetPart, int localx, int localy, int globalx, int globaly){
+    public GridPart(StreetPart streetPart, int localx, int localy, int globalx, int globaly){
         this.streetPart = streetPart;
         this.localx = localx; this.localy = localy;
         this.globalx = globalx; this.globaly = globaly;

@@ -24,6 +24,22 @@ public abstract class StreetPart{
     }
 
 
+
+    public final synchronized boolean movedVehicleLocally(Vehicle vehicle, Point from, Point to) {
+        if(waitingAtCross(from)){
+            return false;
+        }
+        else{
+            boolean res = gridsInStreetPart[to.y][to.x].setVehicle(vehicle);
+            if(res){
+                gridsInStreetPart[from.y][from.x].setVehicle(null);
+                vehiclesByLocation.remove(from);
+                vehiclesByLocation.put(to, vehicle);
+            }
+            return res;
+        }
+    }
+
     public abstract List<GridPart> getSourcePoints();
     public abstract List<GridPart> getExitPoints();
 
@@ -54,9 +70,12 @@ public abstract class StreetPart{
 
 
     public abstract boolean addedVehicle(Vehicle vehicle, DIRECTION from);
-    public abstract boolean movedVehicleLocally(Vehicle vehicle, Point from, Point to);
     public abstract void removeVehicleAtTarget(Vehicle vehicle);
     public abstract void removeVehicleAt(Point localPosition);
+
+    public boolean waitingAtCross(Point from){
+        return false;
+    }
 
     public abstract List<Point> streetPartMoves(DIRECTION from, DIRECTION to);
 
