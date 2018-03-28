@@ -14,6 +14,7 @@ public class SingleLight {
     }
 
     public boolean turnedOn(){
-        return (vertical && streetLights.areVerticalLightsOn()) || (!vertical && streetLights.areHorizontalLightsOn());
+        return (vertical && streetLights.areVerticalLightsOn())
+                || (!vertical && streetLights.areHorizontalLightsOn());
     }
 }

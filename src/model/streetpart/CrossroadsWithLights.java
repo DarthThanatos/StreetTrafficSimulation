@@ -9,13 +9,11 @@ import java.util.List;
 public class CrossroadsWithLights extends Crossroads {
 
     private StreetLights streetLights;
-    private Thread lightsThread; //TO-DO finish thread
 
     public CrossroadsWithLights(Traffic traffic, int x, int y) {
         super(traffic, x, y);
         streetLights = new StreetLights();
-        lightsThread = new Thread(streetLights);
-        lightsThread.start();
+        traffic.schedule.scheduleRepeating(streetLights);
     }
 
     public List<SingleLight> getLights(){

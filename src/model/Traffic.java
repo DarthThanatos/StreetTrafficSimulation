@@ -1,6 +1,5 @@
 package model;
 
-import model.generators.CrossroadsGenerator;
 import model.generators.DifferentCrossroadsGenerator;
 import model.generators.Generator;
 import model.streetpart.StreetPart;
@@ -27,7 +26,7 @@ public class Traffic extends SimState {
     public static int ROWS = 9, COLUMNS = 9, TILE_SIZE =  8;
     private ObjectGrid2D allStreetsGrids = new ObjectGrid2D(COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
     private Continuous2D vehiclesYardLayer = new Continuous2D(1, COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
-    private Continuous2D streetsYardLayer = new Continuous2D(1, COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
+    private Continuous2D streetsLightsYardLayer = new Continuous2D(1, COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
     private  StreetPart [][] streetParts = new StreetPart[ROWS][COLUMNS];
     private Map<Point, RouteNode> routeGraph;
 
@@ -69,9 +68,9 @@ public class Traffic extends SimState {
     }
 
     private void initPlayground(){
-        streetsYardLayer.clear();
+        streetsLightsYardLayer.clear();
         Generator generator = new DifferentCrossroadsGenerator();
-        generator.generate(this, streetParts, allStreetsGrids, streetsYardLayer);
+        generator.generate(this, streetParts, allStreetsGrids, streetsLightsYardLayer);
     }
 
     public static void main(String[] args){
@@ -198,7 +197,7 @@ public class Traffic extends SimState {
         return vehiclesYardLayer;
     }
 
-    public Continuous2D getStreetLightsYardLayer(){return  streetsYardLayer;}
+    public Continuous2D getStreetLightsYardLayer(){return streetsLightsYardLayer;}
 
     public List<Vehicle> getVehicles(){
         return vehicles;
