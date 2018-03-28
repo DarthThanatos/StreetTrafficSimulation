@@ -1,7 +1,9 @@
 package model;
 
+import model.generators.CrossroadsGenerator;
 import model.generators.DifferentCrossroadsGenerator;
 import model.generators.Generator;
+import model.generators.RandomStreetsGenerator;
 import model.streetpart.StreetPart;
 import model.streetpart.TravelPoint;
 import org.jgrapht.DirectedGraph;
@@ -48,11 +50,6 @@ public class Traffic extends SimState {
         initVehicles();
     }
 
-    @Override public void finish(){
-
-        super.finish();
-    }
-
     private void initVehicles(){
         vehiclesYardLayer.clear();
         vehicles = new ArrayList<>();
@@ -69,8 +66,8 @@ public class Traffic extends SimState {
 
     private void initPlayground(){
         streetsLightsYardLayer.clear();
-        Generator generator = new DifferentCrossroadsGenerator();
-        generator.generate(this, streetParts, allStreetsGrids, streetsLightsYardLayer);
+        Generator generator = new RandomStreetsGenerator();
+        generator.generate(this, streetParts, allStreetsGrids);
     }
 
     public static void main(String[] args){

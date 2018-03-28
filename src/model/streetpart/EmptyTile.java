@@ -9,16 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class NorthWestTileStreet extends StreetPart {
+public class EmptyTile extends StreetPart {
 
-    public NorthWestTileStreet(Traffic traffic, int x, int y) {
+    public EmptyTile(Traffic traffic, int x, int y) {
         super(traffic, x, y);
     }
 
     @Override
     public int tileIndex() {
-        return 2;
+        return 11;
     }
+
     @Override
     public List<GridPart> getSourcePoints() {
         return new ArrayList<>();
@@ -31,16 +32,6 @@ public class NorthWestTileStreet extends StreetPart {
 
     @Override
     public void initRouteNodeHaving(Map<Point, RouteNode> routeGraph) {
-        RouteNode routeNode = routeGraph.get(new Point(x, y));
-        Point key;
-        if(x - 1 >= 0){
-            key  = new Point (x-1, y);
-            routeNode.neighbours.put(key, routeGraph.get(key));
-        }
-        if(y-1 >= 0){
-            key  = new Point (x, y-1);
-            routeNode.neighbours.put(key, routeGraph.get(key));
-        }
 
     }
 }

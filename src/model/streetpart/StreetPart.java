@@ -11,11 +11,13 @@ import java.util.List;
 
 public abstract class StreetPart{
 
-    private Traffic traffic;
+    Traffic traffic;
     HashMap<Point, Vehicle> vehiclesByLocation;
     GridPart[][] gridsInStreetPart;
 
     int x,y;
+
+    public abstract int tileIndex();
 
     StreetPart(Traffic traffic, int x, int  y){
         this.traffic = traffic;

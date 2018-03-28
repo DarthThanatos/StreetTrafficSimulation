@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class NorthEastTileStreet extends StreetPart{
 
-    NorthEastTileStreet(Traffic traffic, int x, int y) {
+    public NorthEastTileStreet(Traffic traffic, int x, int y) {
         super(traffic, x, y);
     }
 
@@ -39,5 +39,11 @@ public class NorthEastTileStreet extends StreetPart{
             routeNode.neighbours.put(key, routeGraph.get(key));
         }
 
+    }
+
+
+    @Override
+    public int tileIndex() {
+        return 3;
     }
 }

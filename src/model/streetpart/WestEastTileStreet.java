@@ -11,10 +11,14 @@ import java.util.Map;
 
 public class WestEastTileStreet extends StreetPart{
 
-    WestEastTileStreet(Traffic traffic, int x, int y) {
+    public WestEastTileStreet(Traffic traffic, int x, int y) {
         super(traffic, x, y);
     }
 
+    @Override
+    public int tileIndex() {
+        return 1;
+    }
     @Override
     public void initRouteNodeHaving(Map<Point, RouteNode> routeGraph) {
         RouteNode routeNode = routeGraph.get(new Point(x, y));

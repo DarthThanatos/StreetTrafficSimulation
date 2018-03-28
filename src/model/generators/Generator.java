@@ -6,5 +6,5 @@ import sim.field.continuous.Continuous2D;
 import sim.field.grid.ObjectGrid2D;
 
 public interface Generator {
-    void generate(Traffic traffic, StreetPart[][] streetParts, ObjectGrid2D allStreetsGrids, Continuous2D streetsYardLayer);
+    void generate(Traffic traffic, StreetPart[][] streetParts, ObjectGrid2D allStreetsGrids);
 }

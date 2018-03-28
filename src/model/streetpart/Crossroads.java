@@ -13,6 +13,11 @@ import java.util.Map;
 
 public class Crossroads extends StreetPart {
 
+    @Override
+    public int tileIndex() {
+        return 10;
+    }
+
     public Crossroads(Traffic traffic, int x, int y) {
         super(traffic, x, y);
     }

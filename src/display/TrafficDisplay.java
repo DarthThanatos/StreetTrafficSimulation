@@ -1,7 +1,9 @@
 package display;
 
+import model.GridPart;
 import model.Traffic;
 import model.streetpart.SingleLight;
+import model.streetpart.StreetPart;
 import sim.display.Console;
 import sim.display.Controller;
 import sim.display.Display2D;
@@ -33,23 +35,36 @@ public class TrafficDisplay extends GUIState {
     private ContinuousPortrayal2D vehiclesPortrayal = new ContinuousPortrayal2D();
     private ContinuousPortrayal2D streetLightsPortrayal = new ContinuousPortrayal2D();
 
-    private BufferedImage crossroadsImage;
+//    private BufferedImage crossroadsImage;
     private static int DISPLAY_WIDTH = 720, DISPLAY_HEIGHT = 720;
+
+    private BufferedImage[] imgsArray = new BufferedImage[12];
 
     private TrafficDisplay(){
         super(new Traffic(System.currentTimeMillis()));
-        try {
-            crossroadsImage = ImageIO.read(new File("resources//crossroads.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        initImgsArray();
     }
 
 
     public TrafficDisplay(SimState simState){
         super(simState);
+        initImgsArray();
+    }
+
+    private void initImgsArray(){
         try {
-            crossroadsImage = ImageIO.read(new File("resources//crossroads.png"));
+            imgsArray[0] = ImageIO.read(new File("resources//northsouth.png"));
+            imgsArray[1] = ImageIO.read(new File("resources//westeast.png"));
+            imgsArray[2] = ImageIO.read(new File("resources//northwest.png"));
+            imgsArray[3] = ImageIO.read(new File("resources//northeast.png"));
+            imgsArray[4] = ImageIO.read(new File("resources//southwest.png"));
+            imgsArray[5] = ImageIO.read(new File("resources//southeast.png"));
+            imgsArray[6] = ImageIO.read(new File("resources//northsouthwest.png"));
+            imgsArray[7] = ImageIO.read(new File("resources//northsoutheast.png"));
+            imgsArray[8] = ImageIO.read(new File("resources//southwesteast.png"));
+            imgsArray[9] = ImageIO.read(new File("resources//northwesteast.png"));
+            imgsArray[10] = ImageIO.read(new File("resources//crossroads.png"));
+            imgsArray[11] = ImageIO.read(new File("resources//empty.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -93,8 +108,9 @@ public class TrafficDisplay extends GUIState {
                     int imgX = (int)(draw.x - width / 2.0D);
                     int imgY = (int)(draw.y - height / 2.0D);
 
+                    StreetPart streetPart = ((GridPart) object).getStreetPart();
                     graphics.drawImage(
-                            TrafficDisplay.this.crossroadsImage.getScaledInstance((int)(tileWidth * display.getScale()), (int)(tileHeight * display.getScale()), 0),
+                            TrafficDisplay.this.imgsArray[streetPart.tileIndex()].getScaledInstance((int)(tileWidth * display.getScale()), (int)(tileHeight * display.getScale()), 0),
                             imgX, imgY, null
                     );
 

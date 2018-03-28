@@ -12,10 +12,15 @@ import java.util.Map;
 
 public class NorthSouthTileStreet extends StreetPart {
 
-    NorthSouthTileStreet(Traffic traffic, int x, int y) {
+    public NorthSouthTileStreet(Traffic traffic, int x, int y) {
         super(traffic, x, y);
     }
 
+
+    @Override
+    public int tileIndex() {
+        return 0;
+    }
 
     @Override
     public void initRouteNodeHaving(Map<Point, RouteNode> routeGraph) {

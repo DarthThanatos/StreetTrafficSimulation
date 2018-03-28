@@ -11,10 +11,14 @@ import java.util.Map;
 
 public class SouthEastTileStreet extends StreetPart {
 
-    SouthEastTileStreet(Traffic traffic, int x, int y) {
+    public SouthEastTileStreet(Traffic traffic, int x, int y) {
         super(traffic, x, y);
     }
 
+    @Override
+    public int tileIndex() {
+        return 5;
+    }
     @Override
     public List<GridPart> getSourcePoints() {
         return new ArrayList<>();

@@ -11,8 +11,14 @@ import java.util.Map;
 
 public class NorthSouthEastTileStreet extends StreetPart{
 
-    NorthSouthEastTileStreet(Traffic traffic, int x, int y) {
+    public NorthSouthEastTileStreet(Traffic traffic, int x, int y) {
         super(traffic, x, y);
+    }
+
+
+    @Override
+    public int tileIndex() {
+        return 7;
     }
 
     @Override

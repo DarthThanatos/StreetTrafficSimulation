@@ -1,6 +1,8 @@
 package model.streetpart;
 
+import model.GridPart;
 import model.Traffic;
+import sim.util.Double2D;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -16,7 +18,15 @@ public class CrossroadsWithLights extends Crossroads {
         traffic.schedule.scheduleRepeating(streetLights);
     }
 
-    public List<SingleLight> getLights(){
+    @Override
+    public void setGridsInStreetPart(GridPart[][] gridsInStreetPart){
+        super.setGridsInStreetPart(gridsInStreetPart);
+        for(SingleLight light : getLights()){
+            traffic.getStreetLightsYardLayer().setObjectLocation(light, new Double2D(light.position.x  + .5, light.position.y  + .5));
+        }
+    }
+
+    private List<SingleLight> getLights(){
         return Arrays.asList(
                 new SingleLight(gridsInStreetPart[5][5].getGlobalPoint(),true, streetLights),
                 new SingleLight(gridsInStreetPart[2][2].getGlobalPoint(),true, streetLights),

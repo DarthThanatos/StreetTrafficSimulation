@@ -23,13 +23,4 @@ public class DifferentCrossroadsGenerator extends CrossroadsGenerator {
 
         }
     }
-
-    @Override void updateStreetsYardLayer(Continuous2D streetsYardLayer, Crossroads crossroads){
-        if(crossroads instanceof CrossroadsWithLights){
-            CrossroadsWithLights crossroadsWithLights = (CrossroadsWithLights) crossroads;
-            for(SingleLight light : crossroadsWithLights.getLights()){
-                streetsYardLayer.setObjectLocation(light, new Double2D(light.position.x  + .5, light.position.y  + .5));
-            }
-        }
-    }
 }
