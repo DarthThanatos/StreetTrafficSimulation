@@ -2,7 +2,6 @@ package model.generators;
 
 import model.Traffic;
 import model.streetpart.*;
-import sim.field.continuous.Continuous2D;
 import sim.field.grid.ObjectGrid2D;
 import utils.GeneratorsUtils;
 
@@ -45,7 +44,6 @@ public class RandomStreetsGenerator implements Generator {
 
     }
 
-
     interface StreetPartFactory{
         StreetPart newStreetPart(Traffic traffic, int i, int j);
     }
@@ -62,24 +60,7 @@ public class RandomStreetsGenerator implements Generator {
             (t, i,j) -> new SouthWestEastTileStreet(t,j,i),
             (t, i,j) -> new NorthWestEastTileStreet(t,j,i),
             (t, i,j) -> new CrossroadsWithLights(t,j,i),
-            (t,i,j) -> new EmptyTile(t,j,i)
-    };
-
-    private HashMap<Boolean[], Integer> partsConnectingDirections = new HashMap<Boolean[], Integer>(){
-        {
-            put(new Boolean[]{Boolean.TRUE, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE}, 0);
-            put(new Boolean[]{Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, Boolean.TRUE}, 1);
-            put(new Boolean[]{Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE}, 2);
-            put(new Boolean[]{Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE}, 3);
-            put(new Boolean[]{Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE}, 4);
-            put(new Boolean[]{Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.FALSE}, 5);
-            put(new Boolean[]{Boolean.TRUE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE}, 6);
-            put(new Boolean[]{Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.FALSE}, 7);
-            put(new Boolean[]{Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE}, 8);
-            put(new Boolean[]{Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Boolean.TRUE}, 9);
-            put(new Boolean[]{Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE}, 10);
-            put(new Boolean[]{Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE}, 11);
-        }
+            (t, i,j) -> new EmptyTile(t,j,i)
     };
 
     private HashMap<String, Integer> partsConnectingStringDirections = new HashMap<String, Integer>(){
@@ -184,7 +165,7 @@ public class RandomStreetsGenerator implements Generator {
                 try {
                     GeneratorsUtils.initStreetPart(factories[factoryIndex].newStreetPart(traffic, i, j), streetParts, allStreetsGrids, i, j);
                 }catch(NullPointerException e){
-                    e.printStackTrace();
+//                    e.printStackTrace();
                     switch(key.indexOf('t')){
                         case 0: mapSouthOf(streetParts, i, j, traffic, allStreetsGrids); GeneratorsUtils.initStreetPart(factories[0].newStreetPart(traffic, i, j), streetParts, allStreetsGrids, i, j); break;
                         case 1: mapWestOf(streetParts, i,j, traffic, allStreetsGrids); GeneratorsUtils.initStreetPart(factories[1].newStreetPart(traffic, i, j), streetParts, allStreetsGrids, i, j);break;
@@ -208,7 +189,7 @@ public class RandomStreetsGenerator implements Generator {
     private void mapWestOf(StreetPart[][] streetParts, int i, int j, Traffic traffic, ObjectGrid2D allStreetGrids) {
         switch(streetParts[i][j-1].tileIndex()){
             case 0: GeneratorsUtils.initStreetPart(factories[7].newStreetPart(traffic, i,j-1 ), streetParts, allStreetGrids, i, j-1);break;
-            case 7:GeneratorsUtils.initStreetPart(factories[10].newStreetPart(traffic, i,j-1), streetParts, allStreetGrids, i, j-1); break;
+            case 6:GeneratorsUtils.initStreetPart(factories[10].newStreetPart(traffic, i,j-1), streetParts, allStreetGrids, i, j-1); break;
             case 2: GeneratorsUtils.initStreetPart(factories[9].newStreetPart(traffic, i,j-1), streetParts, allStreetGrids, i, j-1);break;
             case 4: GeneratorsUtils.initStreetPart(factories[8].newStreetPart(traffic, i,j-1), streetParts, allStreetGrids, i, j-1);break;
         }
