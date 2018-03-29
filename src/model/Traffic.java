@@ -44,6 +44,7 @@ public class Traffic extends SimState {
     @Override
     public void start(){
         super.start();
+        System.out.println("\n=========\nStarting\n=========\n");
         allStreetsGrids.clear();
         initPlayground();
         initRouteGraph();
@@ -66,6 +67,7 @@ public class Traffic extends SimState {
 
     private void initPlayground(){
         streetsLightsYardLayer.clear();
+        streetParts = new StreetPart[ROWS][COLUMNS];
         Generator generator = new RandomStreetsGenerator();
         generator.generate(this, streetParts, allStreetsGrids);
     }
@@ -137,6 +139,7 @@ public class Traffic extends SimState {
 
     private void initRouteGraph(){
         routeGraph = new HashMap<>();
+        directedGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
         for (int i = 0; i < ROWS; i++){
             for (int j = 0; j < COLUMNS; j++){
                 routeGraph.put(new Point(j, i), new RouteNode(j, i));
