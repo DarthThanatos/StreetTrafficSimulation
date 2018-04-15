@@ -68,7 +68,8 @@ public class Traffic extends SimState {
     private void initPlayground(){
         streetsLightsYardLayer.clear();
         streetParts = new StreetPart[ROWS][COLUMNS];
-        Generator generator = new RandomStreetsGenerator();
+        //Generator generator = new RandomStreetsGenerator();
+        Generator generator = new DifferentCrossroadsGenerator();
         generator.generate(this, streetParts, allStreetsGrids);
     }
 
