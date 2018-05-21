@@ -19,6 +19,7 @@ public class NorthWestTileStreet extends StreetPart {
     public int tileIndex() {
         return 2;
     }
+
     @Override
     public List<GridPart> getSourcePoints() {
         return new ArrayList<>();
@@ -33,12 +34,12 @@ public class NorthWestTileStreet extends StreetPart {
     public void initRouteNodeHaving(Map<Point, RouteNode> routeGraph) {
         RouteNode routeNode = routeGraph.get(new Point(x, y));
         Point key;
-        if(x - 1 >= 0){
-            key  = new Point (x-1, y);
+        if (x - 1 >= 0) {
+            key = new Point(x - 1, y);
             routeNode.neighbours.put(key, routeGraph.get(key));
         }
-        if(y-1 >= 0){
-            key  = new Point (x, y-1);
+        if (y - 1 >= 0) {
+            key = new Point(x, y - 1);
             routeNode.neighbours.put(key, routeGraph.get(key));
         }
 
