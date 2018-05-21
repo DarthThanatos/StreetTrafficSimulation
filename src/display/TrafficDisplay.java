@@ -35,23 +35,23 @@ public class TrafficDisplay extends GUIState {
     private ContinuousPortrayal2D vehiclesPortrayal = new ContinuousPortrayal2D();
     private ContinuousPortrayal2D streetLightsPortrayal = new ContinuousPortrayal2D();
 
-//    private BufferedImage crossroadsImage;
+    //    private BufferedImage crossroadsImage;
     private static int DISPLAY_WIDTH = 720, DISPLAY_HEIGHT = 720;
 
     private BufferedImage[] imgsArray = new BufferedImage[12];
 
-    private TrafficDisplay(){
+    private TrafficDisplay() {
         super(new Traffic(System.currentTimeMillis()));
         initImgsArray();
     }
 
 
-    public TrafficDisplay(SimState simState){
+    public TrafficDisplay(SimState simState) {
         super(simState);
         initImgsArray();
     }
 
-    private void initImgsArray(){
+    private void initImgsArray() {
         try {
             imgsArray[0] = ImageIO.read(new File("resources//northsouth.png"));
             imgsArray[1] = ImageIO.read(new File("resources//westeast.png"));
@@ -70,13 +70,13 @@ public class TrafficDisplay extends GUIState {
         }
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         TrafficDisplay vid = new TrafficDisplay();
         Console c = new Console(vid);
         c.setVisible(true);
     }
 
-    public void start()  {
+    public void start() {
         super.start();
         setupPortrayals();
     }
@@ -89,7 +89,7 @@ public class TrafficDisplay extends GUIState {
         streetLightsPortrayal.setField(streetLightsYardLayer);
         vehiclesPortrayal.setField(vehiclesYardLayer);
         streetPortrayal.setField(streetsGrids);
-        streetPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.BLUE){
+        streetPortrayal.setPortrayalForAll(new OvalPortrayal2D(Color.BLUE) {
             @Override
             public void draw(Object object, Graphics2D graphics, DrawInfo2D info) {
                 MutableInt2D location = (MutableInt2D) info.location;
@@ -100,17 +100,17 @@ public class TrafficDisplay extends GUIState {
                 int j = location.x % Traffic.TILE_SIZE;
                 int i = location.y % Traffic.TILE_SIZE;
 
-                if(j == 0 && i == 0) {
+                if (j == 0 && i == 0) {
                     java.awt.geom.Rectangle2D.Double draw = info.draw;
                     double width = draw.width * this.scale + this.offset;
                     double height = draw.height * this.scale + this.offset;
 
-                    int imgX = (int)(draw.x - width / 2.0D);
-                    int imgY = (int)(draw.y - height / 2.0D);
+                    int imgX = (int) (draw.x - width / 2.0D);
+                    int imgY = (int) (draw.y - height / 2.0D);
 
                     StreetPart streetPart = ((GridPart) object).getStreetPart();
                     graphics.drawImage(
-                            TrafficDisplay.this.imgsArray[streetPart.tileIndex()].getScaledInstance((int)(tileWidth * display.getScale()), (int)(tileHeight * display.getScale()), 0),
+                            TrafficDisplay.this.imgsArray[streetPart.tileIndex()].getScaledInstance((int) (tileWidth * display.getScale()), (int) (tileHeight * display.getScale()), 0),
                             imgX, imgY, null
                     );
 
@@ -119,7 +119,7 @@ public class TrafficDisplay extends GUIState {
             }
         });
         streetLightsPortrayal.setPortrayalForAll(
-                new OvalPortrayal2D(){
+                new OvalPortrayal2D() {
                     @Override
                     public void draw(Object object, Graphics2D graphics, DrawInfo2D info) {
                         SingleLight singleLight = (SingleLight) object;
@@ -139,28 +139,27 @@ public class TrafficDisplay extends GUIState {
         displayFrame.setSize(DISPLAY_WIDTH * 3 / 2, DISPLAY_HEIGHT * 3 / 2);
     }
 
-    public void load(SimState state)
-    {
+    public void load(SimState state) {
         super.load(state);
         setupPortrayals();
     }
 
     public void init(Controller c) {
         super.init(c);
-        display = new Display2D(DISPLAY_WIDTH ,DISPLAY_HEIGHT,this);
+        display = new Display2D(DISPLAY_WIDTH, DISPLAY_HEIGHT, this);
         display.setClipping(false);
         displayFrame = display.createFrame();
         displayFrame.setTitle("Traffic Display");
         c.registerFrame(displayFrame); // so the frame appears in the "Display" list
         displayFrame.setVisible(true);
-        display.attach( streetPortrayal, "Streets" );
+        display.attach(streetPortrayal, "Streets");
         display.attach(streetLightsPortrayal, "StreetLights");
         display.attach(vehiclesPortrayal, "Vehicles");
     }
 
-    public void quit()  {
+    public void quit() {
         super.quit();
-        if (displayFrame!=null) displayFrame.dispose();
+        if (displayFrame != null) displayFrame.dispose();
         displayFrame = null;
         display = null;
     }

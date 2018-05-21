@@ -9,31 +9,30 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public abstract class StreetPart{
+public abstract class StreetPart {
 
     Traffic traffic;
     HashMap<Point, Vehicle> vehiclesByLocation;
     GridPart[][] gridsInStreetPart;
 
-    int x,y;
+    int x, y;
 
     public abstract int tileIndex();
 
-    StreetPart(Traffic traffic, int x, int  y){
+    StreetPart(Traffic traffic, int x, int y) {
         this.traffic = traffic;
-        this.x = x; this.y=y;
+        this.x = x;
+        this.y = y;
         vehiclesByLocation = new HashMap<>();
     }
 
 
-
     public final synchronized boolean movedVehicleLocally(Vehicle vehicle, Point from, Point to) {
-        if(waitingAtCross(from)){
+        if (waitingAtCross(from)) {
             return false;
-        }
-        else{
+        } else {
             boolean res = gridsInStreetPart[to.y][to.x].setVehicle(vehicle);
-            if(res){
+            if (res) {
                 gridsInStreetPart[from.y][from.x].setVehicle(null);
                 vehiclesByLocation.remove(from);
                 vehiclesByLocation.put(to, vehicle);
@@ -43,6 +42,7 @@ public abstract class StreetPart{
     }
 
     public abstract List<GridPart> getSourcePoints();
+
     public abstract List<GridPart> getExitPoints();
 
     public int getX() {
@@ -60,9 +60,11 @@ public abstract class StreetPart{
     public abstract void initRouteNodeHaving(Map<Point, RouteNode> routeGraph);
 
 
-    public enum DIRECTION{NORTH, EAST, SOUTH, WEST};
+    public enum DIRECTION {NORTH, EAST, SOUTH, WEST}
 
-    public Set<Point> getVehiclesPositions(){
+    ;
+
+    public Set<Point> getVehiclesPositions() {
         return vehiclesByLocation.keySet();
     }
 
@@ -73,18 +75,18 @@ public abstract class StreetPart{
 
     public synchronized boolean addedVehicle(Vehicle vehicle, DIRECTION from) {
         boolean res = false;
-        if(from == DIRECTION.NORTH){
-            res |=  gridsInStreetPart[0][3].setVehicle(vehicle);
+        if (from == DIRECTION.NORTH) {
+            res |= gridsInStreetPart[0][3].setVehicle(vehicle);
         }
-        if(from == DIRECTION.EAST){
+        if (from == DIRECTION.EAST) {
             res |= gridsInStreetPart[3][7].setVehicle(vehicle);
         }
-        if(from == DIRECTION.SOUTH){
+        if (from == DIRECTION.SOUTH) {
             res |= gridsInStreetPart[7][4].setVehicle(vehicle);
         }
-        if(from == DIRECTION.WEST)
+        if (from == DIRECTION.WEST)
             res |= gridsInStreetPart[4][0].setVehicle(vehicle);
-        if(res) {
+        if (res) {
             vehiclesByLocation.put(vehicle.getGridPart().getLocalPoint(), vehicle);
         }
         return res;
@@ -102,184 +104,184 @@ public abstract class StreetPart{
         vehiclesByLocation.remove(localPosition);
 
     }
-    public boolean waitingAtCross(Point from){
+
+    public boolean waitingAtCross(Point from) {
         return false;
     }
 
 
     public List<Point> streetPartMoves(DIRECTION from, DIRECTION to) {
-        if(from == DIRECTION.NORTH && to == DIRECTION.SOUTH) return streetCoordsNorthToSouth();
-        if(from == DIRECTION.NORTH && to == DIRECTION.EAST) return streetCoordsNorthToEast();
-        if(from == DIRECTION.NORTH && to == DIRECTION.WEST) return streetCoordsNorthToWest();
-        if(from == DIRECTION.SOUTH && to == DIRECTION.NORTH) return streetCoordsSouthToNorth();
-        if(from == DIRECTION.SOUTH && to == DIRECTION.WEST) return streetCoordsSouthToWest();
-        if(from == DIRECTION.SOUTH && to == DIRECTION.EAST) return streetCoordsSouthToEast();
-        if(from == DIRECTION.EAST && to == DIRECTION.SOUTH) return streetCoordsEastToSouth();
-        if(from == DIRECTION.EAST && to == DIRECTION.NORTH) return streetCoordsEastToNorth();
-        if(from == DIRECTION.EAST && to == DIRECTION.WEST) return streetCoordsEastToWest();
-        if(from == DIRECTION.WEST && to == DIRECTION.SOUTH) return streetCoordsWestToSouth();
-        if(from == DIRECTION.WEST && to == DIRECTION.NORTH) return streetCoordsWestToNorth();
-        if(from == DIRECTION.WEST && to == DIRECTION.EAST) return streetCoordsWestToEast();
+        if (from == DIRECTION.NORTH && to == DIRECTION.SOUTH) return streetCoordsNorthToSouth();
+        if (from == DIRECTION.NORTH && to == DIRECTION.EAST) return streetCoordsNorthToEast();
+        if (from == DIRECTION.NORTH && to == DIRECTION.WEST) return streetCoordsNorthToWest();
+        if (from == DIRECTION.SOUTH && to == DIRECTION.NORTH) return streetCoordsSouthToNorth();
+        if (from == DIRECTION.SOUTH && to == DIRECTION.WEST) return streetCoordsSouthToWest();
+        if (from == DIRECTION.SOUTH && to == DIRECTION.EAST) return streetCoordsSouthToEast();
+        if (from == DIRECTION.EAST && to == DIRECTION.SOUTH) return streetCoordsEastToSouth();
+        if (from == DIRECTION.EAST && to == DIRECTION.NORTH) return streetCoordsEastToNorth();
+        if (from == DIRECTION.EAST && to == DIRECTION.WEST) return streetCoordsEastToWest();
+        if (from == DIRECTION.WEST && to == DIRECTION.SOUTH) return streetCoordsWestToSouth();
+        if (from == DIRECTION.WEST && to == DIRECTION.NORTH) return streetCoordsWestToNorth();
+        if (from == DIRECTION.WEST && to == DIRECTION.EAST) return streetCoordsWestToEast();
         return new ArrayList<>();
     }
 
 
-
-    List<Point> streetCoordsNorthToSouth(){
+    List<Point> streetCoordsNorthToSouth() {
         return Arrays.asList(
-                new Point(3,0),
-                new Point(3,1),
-                new Point(3,2),
-                new Point(3,3),
-                new Point(3,4),
-                new Point(3,5),
-                new Point(3,6),
-                new Point(3,7)
+                new Point(3, 0),
+                new Point(3, 1),
+                new Point(3, 2),
+                new Point(3, 3),
+                new Point(3, 4),
+                new Point(3, 5),
+                new Point(3, 6),
+                new Point(3, 7)
         );
     }
 
-    List<Point> streetCoordsNorthToWest(){
+    List<Point> streetCoordsNorthToWest() {
         return Arrays.asList(
-                new Point(3,0),
-                new Point(3,1),
-                new Point(3,2),
-                new Point(3,3),
-                new Point(2,3),
-                new Point(1,3),
-                new Point(0,3)
-        );
-
-    }
-
-    List<Point> streetCoordsNorthToEast(){
-        return Arrays.asList(
-                new Point(3,0),
-                new Point(3,1),
-                new Point(3,2),
-                new Point(3,3),
-                new Point(3,4),
-                new Point(4,4),
-                new Point(5,4),
-                new Point(6,4),
-                new Point(7,4)
+                new Point(3, 0),
+                new Point(3, 1),
+                new Point(3, 2),
+                new Point(3, 3),
+                new Point(2, 3),
+                new Point(1, 3),
+                new Point(0, 3)
         );
 
     }
 
-    List<Point> streetCoordsSouthToNorth(){
+    List<Point> streetCoordsNorthToEast() {
         return Arrays.asList(
-                new Point(4,7),
-                new Point(4,6),
-                new Point(4,5),
-                new Point(4,4),
-                new Point(4,3),
-                new Point(4,2),
-                new Point(4,1),
-                new Point(4,0)
+                new Point(3, 0),
+                new Point(3, 1),
+                new Point(3, 2),
+                new Point(3, 3),
+                new Point(3, 4),
+                new Point(4, 4),
+                new Point(5, 4),
+                new Point(6, 4),
+                new Point(7, 4)
+        );
+
+    }
+
+    List<Point> streetCoordsSouthToNorth() {
+        return Arrays.asList(
+                new Point(4, 7),
+                new Point(4, 6),
+                new Point(4, 5),
+                new Point(4, 4),
+                new Point(4, 3),
+                new Point(4, 2),
+                new Point(4, 1),
+                new Point(4, 0)
         );
     }
 
-    List<Point> streetCoordsSouthToEast(){
+    List<Point> streetCoordsSouthToEast() {
         return Arrays.asList(
-                new Point(4,7),
-                new Point(4,6),
-                new Point(4,5),
-                new Point(4,4),
-                new Point(5,4),
-                new Point(6,4),
-                new Point(7,4)
+                new Point(4, 7),
+                new Point(4, 6),
+                new Point(4, 5),
+                new Point(4, 4),
+                new Point(5, 4),
+                new Point(6, 4),
+                new Point(7, 4)
         );
     }
 
-    List<Point> streetCoordsSouthToWest(){
+    List<Point> streetCoordsSouthToWest() {
         return Arrays.asList(
-                new Point(4,7),
-                new Point(4,6),
-                new Point(4,5),
-                new Point(4,4),
-                new Point(4,3),
-                new Point(3,3),
-                new Point(2,3),
-                new Point(1,3),
-                new Point(0,3)
+                new Point(4, 7),
+                new Point(4, 6),
+                new Point(4, 5),
+                new Point(4, 4),
+                new Point(4, 3),
+                new Point(3, 3),
+                new Point(2, 3),
+                new Point(1, 3),
+                new Point(0, 3)
         );
     }
 
-    List<Point> streetCoordsEastToNorth(){
+    List<Point> streetCoordsEastToNorth() {
         return Arrays.asList(
-                new Point(7,3),
-                new Point(6,3),
-                new Point(5,3),
-                new Point(4,3),
-                new Point(4,2),
-                new Point(4,1),
-                new Point(4,0)
+                new Point(7, 3),
+                new Point(6, 3),
+                new Point(5, 3),
+                new Point(4, 3),
+                new Point(4, 2),
+                new Point(4, 1),
+                new Point(4, 0)
         );
     }
 
-    List<Point> streetCoordsEastToSouth(){
+    List<Point> streetCoordsEastToSouth() {
         return Arrays.asList(
-                new Point(7,3),
-                new Point(6,3),
-                new Point(5,3),
-                new Point(4,3),
-                new Point(3,3),
-                new Point(3,4),
-                new Point(3,5),
-                new Point(3,6),
-                new Point(3,7)
+                new Point(7, 3),
+                new Point(6, 3),
+                new Point(5, 3),
+                new Point(4, 3),
+                new Point(3, 3),
+                new Point(3, 4),
+                new Point(3, 5),
+                new Point(3, 6),
+                new Point(3, 7)
         );
     }
 
-    List<Point> streetCoordsEastToWest(){
+    List<Point> streetCoordsEastToWest() {
         return Arrays.asList(
-                new Point(7,3),
-                new Point(6,3),
-                new Point(5,3),
-                new Point(4,3),
-                new Point(3,3),
-                new Point(2,3),
-                new Point(1,3),
-                new Point(0,3)
+                new Point(7, 3),
+                new Point(6, 3),
+                new Point(5, 3),
+                new Point(4, 3),
+                new Point(3, 3),
+                new Point(2, 3),
+                new Point(1, 3),
+                new Point(0, 3)
         );
     }
 
-    List<Point> streetCoordsWestToNorth(){
+    List<Point> streetCoordsWestToNorth() {
         return Arrays.asList(
-                new Point(0,4),
-                new Point(1,4),
-                new Point(2,4),
-                new Point(3,4),
-                new Point(4,4),
-                new Point(4,3),
-                new Point(4,2),
-                new Point(4,1),
-                new Point(4,0)
+                new Point(0, 4),
+                new Point(1, 4),
+                new Point(2, 4),
+                new Point(3, 4),
+                new Point(4, 4),
+                new Point(4, 3),
+                new Point(4, 2),
+                new Point(4, 1),
+                new Point(4, 0)
         );
     }
 
-    List<Point> streetCoordsWestToSouth(){
+    List<Point> streetCoordsWestToSouth() {
         return Arrays.asList(
-                new Point(0,4),
-                new Point(1,4),
-                new Point(2,4),
-                new Point(3,4),
-                new Point(3,5),
-                new Point(3,6),
-                new Point(3,7)
+                new Point(0, 4),
+                new Point(1, 4),
+                new Point(2, 4),
+                new Point(3, 4),
+                new Point(3, 5),
+                new Point(3, 6),
+                new Point(3, 7)
         );
     }
 
-    List<Point> streetCoordsWestToEast(){
+    List<Point> streetCoordsWestToEast() {
         return Arrays.asList(
-                new Point(0,4),
-                new Point(1,4),
-                new Point(2,4),
-                new Point(3,4),
-                new Point(4,4),
-                new Point(5,4),
-                new Point(6,4),
-                new Point(7,4)
+                new Point(0, 4),
+                new Point(1, 4),
+                new Point(2, 4),
+                new Point(3, 4),
+                new Point(4, 4),
+                new Point(5, 4),
+                new Point(6, 4),
+                new Point(7, 4)
         );
     }
 

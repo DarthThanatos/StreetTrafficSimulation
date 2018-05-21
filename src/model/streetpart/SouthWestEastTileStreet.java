@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SouthWestEastTileStreet extends StreetPart{
+public class SouthWestEastTileStreet extends StreetPart {
 
     public SouthWestEastTileStreet(Traffic traffic, int x, int y) {
         super(traffic, x, y);
@@ -19,6 +19,7 @@ public class SouthWestEastTileStreet extends StreetPart{
     public int tileIndex() {
         return 8;
     }
+
     @Override
     public List<GridPart> getSourcePoints() {
         return new ArrayList<>();
@@ -33,16 +34,16 @@ public class SouthWestEastTileStreet extends StreetPart{
     public void initRouteNodeHaving(Map<Point, RouteNode> routeGraph) {
         RouteNode routeNode = routeGraph.get(new Point(x, y));
         Point key;
-        if(x - 1 >= 0){
-            key  = new Point (x-1, y);
+        if (x - 1 >= 0) {
+            key = new Point(x - 1, y);
             routeNode.neighbours.put(key, routeGraph.get(key));
         }
-        if(x+1 < Traffic.COLUMNS){
-            key = new Point(x+1, y);
+        if (x + 1 < Traffic.COLUMNS) {
+            key = new Point(x + 1, y);
             routeNode.neighbours.put(key, routeGraph.get(key));
         }
-        if(y+1 < Traffic.ROWS){
-            key  = new Point (x, y+1);
+        if (y + 1 < Traffic.ROWS) {
+            key = new Point(x, y + 1);
             routeNode.neighbours.put(key, routeGraph.get(key));
         }
 

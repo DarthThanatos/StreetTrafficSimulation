@@ -11,6 +11,7 @@ import utils.DirectionUtils;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 public class Vehicle implements Steppable {
@@ -30,42 +31,54 @@ public class Vehicle implements Steppable {
 
     private Statistics statistics = new Statistics();
 
-    void setSource(TravelPoint source){
+    private int speedSlowFactor = 0;
+    private int stepCounter = 0;
+
+    private Random random;
+
+    public Vehicle() {
+        random = new Random();
+    }
+
+    void setSource(TravelPoint source) {
         this.source = source;
         this.gridPart = source.gridPart;
     }
 
-    TravelPoint getSource(){
+    TravelPoint getSource() {
         return source;
     }
 
-    public TravelPoint getTarget(){
+    public TravelPoint getTarget() {
         return target;
     }
 
     @Override
     public void step(SimState simState) {
-        boolean posChanged = false;
-        if(gridPart == source.gridPart && !source.pointReached){
-            posChanged |= tryToReachSource();
+        initOrUpdateSpeedFactor();
+        if (canMakeStep()) {
+            return;
         }
-        else{
-            posChanged |= normalStep();
+        boolean posChanged;
+        if (gridPart == source.gridPart && !source.pointReached) {
+            posChanged = tryToReachSource();
+        } else {
+            posChanged = normalStep();
         }
-        if(posChanged){
+        if (posChanged) {
             Continuous2D vehiclesYardLayer = gridPart.getStreetPart().getTraffic().getVehiclesYardLayer();
             vehiclesYardLayer.setObjectLocation(
-                    gridPart.getVehicle(), new Double2D(gridPart.getGlobalx() + .5,gridPart.getGlobaly() + .5)
+                    gridPart.getVehicle(), new Double2D(gridPart.getGlobalx() + .5, gridPart.getGlobaly() + .5)
             );
         }
     }
 
-    private boolean tryToReachSource(){
+    private boolean tryToReachSource() {
         boolean vehicleAdded = source.streetPart.addedVehicle(
                 this,
                 DirectionUtils.localPointToDirection(source.gridPart.getLocalPoint())
         );
-        if(vehicleAdded){
+        if (vehicleAdded) {
             source.pointReached = true;
             resetRoute();
             setupCurrentLocalRouteMoves();
@@ -76,7 +89,7 @@ public class Vehicle implements Steppable {
     }
 
 
-    private void setupCurrentLocalRouteMoves(){
+    private void setupCurrentLocalRouteMoves() {
         Point currentStreet = streetPartsRoute.get(currentStreetPartInPath);
         StreetPart.DIRECTION from = DirectionUtils.localPointToDirection(gridPart.getLocalPoint());
         System.out.println(from);
@@ -87,7 +100,7 @@ public class Vehicle implements Steppable {
 
         System.out.println(currentStreet + " -> " + (nextStreet != null ? nextStreet : target.gridPart.getLocalPoint()) + ", local: " + gridPart.getLocalPoint());
         System.out.println(
-                localRouteMoves.stream().map(point -> "(" + point.x + ", " + point.y + ")").reduce((agg, s) ->  agg + "; " + s) + "\n"
+                localRouteMoves.stream().map(point -> "(" + point.x + ", " + point.y + ")").reduce((agg, s) -> agg + "; " + s) + "\n"
         );
     }
 
@@ -95,7 +108,7 @@ public class Vehicle implements Steppable {
         boolean notEndOfCurrentTile = currentLocalRouteMove < localRouteMoves.size() - 1;
         boolean notEndOfCurrentCycle = currentStreetPartInPath < streetPartsRoute.size() - 1;
         boolean movedVehicleInThisStep = false;
-        if(notEndOfCurrentTile) {
+        if (notEndOfCurrentTile) {
             boolean movedVehicleLocally = gridPart.getStreetPart().movedVehicleLocally(
                     this,
                     localRouteMoves.get(currentLocalRouteMove),
@@ -104,51 +117,64 @@ public class Vehicle implements Steppable {
                 currentLocalRouteMove++;
                 movedVehicleInThisStep = true;
             }
-        }
-        else{
-             if(notEndOfCurrentCycle){
-                 boolean movedVehicleAcrossStreets = gridPart.getStreetPart().getTraffic().movedVehicleAcrossStreets(
-                         this,
-                         streetPartsRoute.get(currentStreetPartInPath),
-                         streetPartsRoute.get(currentStreetPartInPath + 1),
-                         gridPart.getLocalPoint()
-                 );
-                 if(movedVehicleAcrossStreets) {
-                     currentStreetPartInPath ++;
-                     setupCurrentLocalRouteMoves();
-                     movedVehicleInThisStep = true;
-                 }
-             }
-             else{
-                 gridPart.getStreetPart().getTraffic().endVehicleCycle(this);
-             }
+        } else {
+            if (notEndOfCurrentCycle) {
+                boolean movedVehicleAcrossStreets = gridPart.getStreetPart().getTraffic().movedVehicleAcrossStreets(
+                        this,
+                        streetPartsRoute.get(currentStreetPartInPath),
+                        streetPartsRoute.get(currentStreetPartInPath + 1),
+                        gridPart.getLocalPoint()
+                );
+                if (movedVehicleAcrossStreets) {
+                    currentStreetPartInPath++;
+                    setupCurrentLocalRouteMoves();
+                    movedVehicleInThisStep = true;
+                }
+            } else {
+                gridPart.getStreetPart().getTraffic().endVehicleCycle(this);
+            }
         }
         statistics.update(movedVehicleInThisStep, !notEndOfCurrentCycle);
         return movedVehicleInThisStep;
     }
 
-    private void log(){
+    private void log() {
         System.out.println("======");
         System.out.println("Source: " + source);
         System.out.println("Target: " + target);
         System.out.println(
-                streetPartsRoute.stream().map(point -> "(" + point.x + ", " + point.y + ")").reduce((agg, s) ->  agg + "; " + s)
+                streetPartsRoute.stream().map(point -> "(" + point.x + ", " + point.y + ")").reduce((agg, s) -> agg + "; " + s)
         );
         System.out.println(
-                localRouteMoves.stream().map(point -> "(" + point.x + ", " + point.y + ")").reduce((agg, s) ->  agg + "; " + s)
+                localRouteMoves.stream().map(point -> "(" + point.x + ", " + point.y + ")").reduce((agg, s) -> agg + "; " + s)
         );
         System.out.println("current local: " + currentLocalRouteMove);
         System.out.println("current street: " + currentStreetPartInPath);
         System.out.println("======");
     }
 
-    private void resetRoute(){
+    private void resetRoute() {
         currentStreetPartInPath = 0;
         target = gridPart.getStreetPart().getTraffic().getRandomTargetTravelPoint(source);
         streetPartsRoute = gridPart.getStreetPart().getTraffic().mountRouteFromTo(source, target);
     }
 
-    void setGridPart(GridPart gridPart){
+    private void initOrUpdateSpeedFactor() {
+        if (speedSlowFactor == 0) {
+            speedSlowFactor = random.nextInt(6) + 1;
+        } else {
+            if (random.nextInt(100) < 3) {
+                speedSlowFactor = random.nextInt(6) + 1;
+            }
+        }
+    }
+
+    private boolean canMakeStep() {
+        stepCounter++;
+        return stepCounter % speedSlowFactor == 0;
+    }
+
+    void setGridPart(GridPart gridPart) {
         this.gridPart = gridPart;
     }
 
@@ -156,11 +182,11 @@ public class Vehicle implements Steppable {
         return gridPart;
     }
 
-    public Point[] getLocalMovesFromCurrent(){
+    public Point[] getLocalMovesFromCurrent() {
         return Arrays.copyOfRange(localRouteMoves.toArray(new Point[localRouteMoves.size()]), currentLocalRouteMove, localRouteMoves.size());
     }
 
-    Statistics getStatistics(){
+    Statistics getStatistics() {
         return statistics;
     }
 
@@ -188,8 +214,8 @@ public class Vehicle implements Steppable {
         return id;
     }
 
-    public Point getCurrentGlobalPos(){
+    public Point getCurrentGlobalPos() {
         Double2D vehiclePos = gridPart.getStreetPart().getTraffic().getVehiclesYardLayer().getObjectLocation(this);
-        return new Point((int)vehiclePos.x, (int)vehiclePos.y);
+        return new Point((int) vehiclePos.x, (int) vehiclePos.y);
     }
 }
