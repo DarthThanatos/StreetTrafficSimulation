@@ -1,7 +1,5 @@
 package model;
 
-import model.generators.CrossroadsGenerator;
-import model.generators.DifferentCrossroadsGenerator;
 import model.generators.Generator;
 import model.generators.RandomStreetsGenerator;
 import model.streetpart.StreetPart;
@@ -25,11 +23,11 @@ public class Traffic extends SimState {
 
     private int vehiclesNumber = 20;
 
-    public static int ROWS = 9, COLUMNS = 9, TILE_SIZE =  8;
+    public static int ROWS = 9, COLUMNS = 9, TILE_SIZE = 8;
     private ObjectGrid2D allStreetsGrids = new ObjectGrid2D(COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
     private Continuous2D vehiclesYardLayer = new Continuous2D(1, COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
     private Continuous2D streetsLightsYardLayer = new Continuous2D(1, COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
-    private  StreetPart [][] streetParts = new StreetPart[ROWS][COLUMNS];
+    private StreetPart[][] streetParts = new StreetPart[ROWS][COLUMNS];
     private Map<Point, RouteNode> routeGraph;
 
     private List<Vehicle> vehicles = new ArrayList<>();
@@ -37,12 +35,12 @@ public class Traffic extends SimState {
     private DirectedGraph<Point, DefaultEdge> directedGraph =
             new DefaultDirectedGraph<>(DefaultEdge.class);
 
-    public Traffic(long seed){
+    public Traffic(long seed) {
         super(seed);
     }
 
     @Override
-    public void start(){
+    public void start() {
         super.start();
         System.out.println("\n=========\nStarting\n=========\n");
         allStreetsGrids.clear();
@@ -51,50 +49,50 @@ public class Traffic extends SimState {
         initVehicles();
     }
 
-    private void initVehicles(){
+    private void initVehicles() {
         vehiclesYardLayer.clear();
         vehicles = new ArrayList<>();
-        for(int i = 0; i< vehiclesNumber; i++){
+        for (int i = 0; i < vehiclesNumber; i++) {
             Vehicle vehicle = new Vehicle();
             TravelPoint source = getRandomSourcePoint();
             vehicle.setSource(source);
             vehicles.add(vehicle);
-            vehiclesYardLayer.setObjectLocation(vehicle, new Double2D(-100,-100));
+            vehiclesYardLayer.setObjectLocation(vehicle, new Double2D(-100, -100));
             schedule.scheduleRepeating(vehicle);
         }
 
     }
 
-    private void initPlayground(){
+    private void initPlayground() {
         streetsLightsYardLayer.clear();
         streetParts = new StreetPart[ROWS][COLUMNS];
         Generator generator = new RandomStreetsGenerator();
+        // Generator generator = new DifferentCrossroadsGenerator();
         generator.generate(this, streetParts, allStreetsGrids);
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         doLoop(Traffic.class, args);
         System.exit(0);
     }
-
 
 
     public ObjectGrid2D getAllStreetsGrids() {
         return allStreetsGrids;
     }
 
-    private TravelPoint getRandomSourcePoint(){
+    private TravelPoint getRandomSourcePoint() {
         HashMap<StreetPart, List<GridPart>> sourcePoints = new HashMap<>();
         StreetPart streetPart;
-        for(int j = 0 ; j< COLUMNS; j++){
-                streetPart = streetParts[0][j];
-                sourcePoints.put(streetPart, streetPart.getSourcePoints());
-                streetPart = streetParts[ROWS - 1][j];
-                sourcePoints.put(streetPart, streetPart.getSourcePoints());
+        for (int j = 0; j < COLUMNS; j++) {
+            streetPart = streetParts[0][j];
+            sourcePoints.put(streetPart, streetPart.getSourcePoints());
+            streetPart = streetParts[ROWS - 1][j];
+            sourcePoints.put(streetPart, streetPart.getSourcePoints());
 
         }
 
-        for (int i = 0; i < ROWS; i++){
+        for (int i = 0; i < ROWS; i++) {
             streetPart = streetParts[i][0];
             sourcePoints.put(streetPart, streetPart.getSourcePoints());
             streetPart = streetParts[i][COLUMNS - 1];
@@ -107,25 +105,25 @@ public class Traffic extends SimState {
         return new TravelPoint(sourceStreet, sourcePoints.get(sourceStreet).get(randomGridIndex));
     }
 
-    TravelPoint getRandomTargetTravelPoint(TravelPoint source){
+    TravelPoint getRandomTargetTravelPoint(TravelPoint source) {
         HashMap<StreetPart, List<GridPart>> exitPoints = new HashMap<>();
-        for(int j = 0 ; j< COLUMNS; j++){
-            if(source.streetPart.getX() != j || source.streetPart.getY() != 0){
+        for (int j = 0; j < COLUMNS; j++) {
+            if (source.streetPart.getX() != j || source.streetPart.getY() != 0) {
                 StreetPart streetPart = streetParts[0][j];
                 exitPoints.put(streetPart, streetPart.getExitPoints());
             }
-            if(source.streetPart.getX() != j || source.streetPart.getY() != ROWS -1){
+            if (source.streetPart.getX() != j || source.streetPart.getY() != ROWS - 1) {
                 StreetPart streetPart = streetParts[ROWS - 1][j];
                 exitPoints.put(streetPart, streetPart.getExitPoints());
             }
         }
 
-        for (int i = 0; i < ROWS; i++){
-            if(source.streetPart.getY() != i || source.streetPart.getX() != 0){
+        for (int i = 0; i < ROWS; i++) {
+            if (source.streetPart.getY() != i || source.streetPart.getX() != 0) {
                 StreetPart streetPart = streetParts[i][0];
                 exitPoints.put(streetPart, streetPart.getExitPoints());
             }
-            if(source.streetPart.getY() != i || source.streetPart.getX() != COLUMNS - 1){
+            if (source.streetPart.getY() != i || source.streetPart.getX() != COLUMNS - 1) {
                 StreetPart streetPart = streetParts[i][COLUMNS - 1];
                 exitPoints.put(streetPart, streetPart.getExitPoints());
             }
@@ -137,21 +135,21 @@ public class Traffic extends SimState {
         return new TravelPoint(exitStreet, exitPoints.get(exitStreet).get(randomGridIndex));
     }
 
-    private void initRouteGraph(){
+    private void initRouteGraph() {
         routeGraph = new HashMap<>();
         directedGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
-        for (int i = 0; i < ROWS; i++){
-            for (int j = 0; j < COLUMNS; j++){
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
                 routeGraph.put(new Point(j, i), new RouteNode(j, i));
-                directedGraph.addVertex(new Point(j,i));
+                directedGraph.addVertex(new Point(j, i));
             }
         }
-        for(int i = 0; i < ROWS; i++){
-            for (int j = 0; j < COLUMNS; j++){
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
                 StreetPart streetPart = streetParts[i][j];
                 streetPart.initRouteNodeHaving(routeGraph);
-                RouteNode routeNode = routeGraph.get(new Point(j,i));
-                for(RouteNode neighbor: routeNode.neighbours.values()){
+                RouteNode routeNode = routeGraph.get(new Point(j, i));
+                for (RouteNode neighbor : routeNode.neighbours.values()) {
                     directedGraph.addEdge(new Point(routeNode.x, routeNode.y), new Point(neighbor.x, neighbor.y));
                 }
             }
@@ -159,24 +157,24 @@ public class Traffic extends SimState {
 
     }
 
-    private void cleanGraph(){
-        for(RouteNode routeNode : routeGraph.values())
+    private void cleanGraph() {
+        for (RouteNode routeNode : routeGraph.values())
             routeNode.visited = false;
     }
 
-    synchronized List<Point> mountRouteFromTo(TravelPoint from, TravelPoint to){
+    synchronized List<Point> mountRouteFromTo(TravelPoint from, TravelPoint to) {
         cleanGraph();
         RouteNode start = routeGraph.get(new Point(from.streetPart.getX(), from.streetPart.getY()));
         StreetPart target = to.streetPart;
         DijkstraShortestPath<Point, DefaultEdge> dijkstraShortestPath = new DijkstraShortestPath<>(directedGraph);
-        ShortestPathAlgorithm.SingleSourcePaths<Point, DefaultEdge> paths = dijkstraShortestPath.getPaths(new Point(start.x, start.y) );
-        return paths.getPath(new Point (target.getX(), target.getY())).getVertexList();
+        ShortestPathAlgorithm.SingleSourcePaths<Point, DefaultEdge> paths = dijkstraShortestPath.getPaths(new Point(start.x, start.y));
+        return paths.getPath(new Point(target.getX(), target.getY())).getVertexList();
     }
 
 
-    synchronized boolean  movedVehicleAcrossStreets(Vehicle vehicle, Point firstStreet, Point targetStreet, Point currentLocalLocation){
+    synchronized boolean movedVehicleAcrossStreets(Vehicle vehicle, Point firstStreet, Point targetStreet, Point currentLocalLocation) {
         boolean res = streetParts[targetStreet.y][targetStreet.x].addedVehicle(vehicle, DirectionUtils.directionOfFirstComparedToSecond(firstStreet, targetStreet));
-        if(res) {
+        if (res) {
             streetParts[firstStreet.y][firstStreet.x].removeVehicleAt(currentLocalLocation);
             System.out.println("Removing at " + firstStreet + " current local: " + currentLocalLocation);
 
@@ -184,7 +182,7 @@ public class Traffic extends SimState {
         return res;
     }
 
-    void endVehicleCycle(Vehicle vehicle){
+    void endVehicleCycle(Vehicle vehicle) {
         System.out.println("Ending cycle");
         vehicle.getGridPart().getStreetPart().removeVehicleAtTarget(vehicle);
         TravelPoint source = vehicle.getSource();
@@ -193,13 +191,15 @@ public class Traffic extends SimState {
 
     }
 
-    public Continuous2D getVehiclesYardLayer(){
+    public Continuous2D getVehiclesYardLayer() {
         return vehiclesYardLayer;
     }
 
-    public Continuous2D getStreetLightsYardLayer(){return streetsLightsYardLayer;}
+    public Continuous2D getStreetLightsYardLayer() {
+        return streetsLightsYardLayer;
+    }
 
-    public List<Vehicle> getVehicles(){
+    public List<Vehicle> getVehicles() {
         return vehicles;
     }
 

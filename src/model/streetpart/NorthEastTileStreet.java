@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class NorthEastTileStreet extends StreetPart{
+public class NorthEastTileStreet extends StreetPart {
 
     public NorthEastTileStreet(Traffic traffic, int x, int y) {
         super(traffic, x, y);
@@ -30,12 +30,12 @@ public class NorthEastTileStreet extends StreetPart{
         RouteNode routeNode = routeGraph.get(new Point(x, y));
         Point key;
 
-        if(x+1 < Traffic.COLUMNS){
-            key = new Point(x+1, y);
+        if (x + 1 < Traffic.COLUMNS) {
+            key = new Point(x + 1, y);
             routeNode.neighbours.put(key, routeGraph.get(key));
         }
-        if(y-1 >= 0){
-            key  = new Point (x, y-1);
+        if (y - 1 >= 0) {
+            key = new Point(x, y - 1);
             routeNode.neighbours.put(key, routeGraph.get(key));
         }
 

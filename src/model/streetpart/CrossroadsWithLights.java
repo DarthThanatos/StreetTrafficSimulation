@@ -19,26 +19,26 @@ public class CrossroadsWithLights extends Crossroads {
     }
 
     @Override
-    public void setGridsInStreetPart(GridPart[][] gridsInStreetPart){
+    public void setGridsInStreetPart(GridPart[][] gridsInStreetPart) {
         super.setGridsInStreetPart(gridsInStreetPart);
-        for(SingleLight light : getLights()){
-            traffic.getStreetLightsYardLayer().setObjectLocation(light, new Double2D(light.position.x  + .5, light.position.y  + .5));
+        for (SingleLight light : getLights()) {
+            traffic.getStreetLightsYardLayer().setObjectLocation(light, new Double2D(light.position.x + .5, light.position.y + .5));
         }
     }
 
-    private List<SingleLight> getLights(){
+    private List<SingleLight> getLights() {
         return Arrays.asList(
-                new SingleLight(gridsInStreetPart[5][5].getGlobalPoint(),true, streetLights),
-                new SingleLight(gridsInStreetPart[2][2].getGlobalPoint(),true, streetLights),
-                new SingleLight(gridsInStreetPart[2][5].getGlobalPoint(),false, streetLights),
-                new SingleLight(gridsInStreetPart[5][2].getGlobalPoint(),false, streetLights)
+                new SingleLight(gridsInStreetPart[5][5].getGlobalPoint(), true, streetLights),
+                new SingleLight(gridsInStreetPart[2][2].getGlobalPoint(), true, streetLights),
+                new SingleLight(gridsInStreetPart[2][5].getGlobalPoint(), false, streetLights),
+                new SingleLight(gridsInStreetPart[5][2].getGlobalPoint(), false, streetLights)
         );
     }
 
-    private List<Point> verticalCrossPoints(){
+    private List<Point> verticalCrossPoints() {
         return Arrays.asList(
-              new Point(4,5),
-              new Point(3,2)
+                new Point(4, 5),
+                new Point(3, 2)
         );
 
     }
@@ -51,7 +51,8 @@ public class CrossroadsWithLights extends Crossroads {
         );
     }
 
-    @Override public boolean waitingAtCross(Point from){
+    @Override
+    public boolean waitingAtCross(Point from) {
         return (verticalCrossPoints().contains(from) && streetLights.areHorizontalLightsOn())
                 || (horizontalCrossPoints().contains(from) && streetLights.areVerticalLightsOn());
     }

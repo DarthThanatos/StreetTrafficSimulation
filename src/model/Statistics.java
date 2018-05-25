@@ -19,9 +19,9 @@ class Statistics {
     private double avgTimePerCycle = 0;
     private double avgTimePerIteration = 0;
 
-    void update(boolean moved, boolean endOfCycle){
+    void update(boolean moved, boolean endOfCycle) {
         allStepsNumber++;
-        if(moved){
+        if (moved) {
             long currentIterationEndTime = System.currentTimeMillis();
             totalTimeSpentInIterations += currentIterationEndTime - currentIterationStartTime;
             currentIterationStartTime = currentIterationEndTime; // the end-time of the previous cycle is the start-time of a new cycle
@@ -29,7 +29,7 @@ class Statistics {
             avgTimePerIteration = totalTimeSpentInIterations / allIterationsNumber;
             avgStepsPerIteration = allStepsNumber / allIterationsNumber;
         }
-        if(endOfCycle){
+        if (endOfCycle) {
             long currentCycleEndTime = System.currentTimeMillis();
             totalTimeSpentInCycles += currentCycleEndTime - currentCycleStartTime;
             currentCycleStartTime = currentCycleEndTime; // the end-time of the previous cycle is the start-time of a new cycle

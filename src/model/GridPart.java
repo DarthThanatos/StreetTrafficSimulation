@@ -8,31 +8,33 @@ public class GridPart {
 
     private StreetPart streetPart;
     private Vehicle vehicle;
-    private int localx,localy, globalx, globaly;
+    private int localx, localy, globalx, globaly;
 
-    public GridPart(StreetPart streetPart, int localx, int localy, int globalx, int globaly){
+    public GridPart(StreetPart streetPart, int localx, int localy, int globalx, int globaly) {
         this.streetPart = streetPart;
-        this.localx = localx; this.localy = localy;
-        this.globalx = globalx; this.globaly = globaly;
+        this.localx = localx;
+        this.localy = localy;
+        this.globalx = globalx;
+        this.globaly = globaly;
     }
 
     public StreetPart getStreetPart() {
         return streetPart;
     }
 
-    public Vehicle getVehicle() {
+    Vehicle getVehicle() {
         return vehicle;
     }
 
     public synchronized boolean setVehicle(Vehicle vehicle) {
-        if(vehicle == null){
+        if (vehicle == null) {
             this.vehicle = null;
             return true;
         }
-        if(this.vehicle == null) {
-           this.vehicle = vehicle;
-           vehicle.setGridPart(this);
-           return true;
+        if (this.vehicle == null) {
+            this.vehicle = vehicle;
+            vehicle.setGridPart(this);
+            return true;
         }
         return false;
     }
@@ -53,11 +55,11 @@ public class GridPart {
         return globaly;
     }
 
-    public Point getGlobalPoint(){
+    public Point getGlobalPoint() {
         return new Point(globalx, globaly);
     }
 
-    public Point getLocalPoint(){
+    public Point getLocalPoint() {
         return new Point(localx, localy);
     }
 
