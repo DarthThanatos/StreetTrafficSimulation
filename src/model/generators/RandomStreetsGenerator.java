@@ -198,7 +198,7 @@ public class RandomStreetsGenerator implements Generator {
         switch(streetParts[i -1][j].tileIndex()){
             case 1: GeneratorsUtils.initStreetPart(factories[8].newStreetPart(traffic,  i-1, j), streetParts, allStreetGrids, i-1, j);break;
             case 9: GeneratorsUtils.initStreetPart(factories[10].newStreetPart(traffic, i-1, j), streetParts, allStreetGrids, i-1, j);break;
-            case 2:GeneratorsUtils.initStreetPart(factories[6].newStreetPart(traffic,  i-1, j), streetParts, allStreetGrids, i-1, j); break;
+            case 2: GeneratorsUtils.initStreetPart(factories[6].newStreetPart(traffic,  i-1, j), streetParts, allStreetGrids, i-1, j); break;
             case 3: GeneratorsUtils.initStreetPart(factories[7].newStreetPart(traffic, i-1, j), streetParts, allStreetGrids, i-1, j);break;
         }
     }
